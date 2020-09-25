@@ -56,6 +56,31 @@
     
     
     <entry>
+      <title>Aspect Ratio</title>
+      <link href="/fe/CSS/3.aspect-ratio/"/>
+      <url>/fe/CSS/3.aspect-ratio/</url>
+      
+        <content type="html"><![CDATA[<h4 id="用-CSS-Padding-来控制元素在不同宽度下固定的比例"><a href="#用-CSS-Padding-来控制元素在不同宽度下固定的比例" class="headerlink" title="用 CSS Padding 来控制元素在不同宽度下固定的比例"></a>用 CSS Padding 来控制元素在不同宽度下固定的比例</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: red;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">100%</span>; <span class="comment">/* 1:1 Aspect Ratio */</span></span><br><span class="line">  <span class="attribute">position</span>: relative; <span class="comment">/* If you want text inside of it */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* If you want text inside of the container */</span></span><br><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 16:9 Aspect Ratio */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">56.25%</span>; <span class="comment">/* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 4:3 Aspect Ratio */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">75%</span>; <span class="comment">/* 4:3 Aspect Ratio (divide 3 by 4 = 0.75) */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 3:2 Aspect Ratio */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">66.66%</span>; <span class="comment">/* 3:2 Aspect Ratio (divide 2 by 3 = 0.6666)  */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 8:5 Aspect Ratio */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">62.5%</span>; <span class="comment">/* 8:5 Aspect Ratio (divide 5 by 8 = 0.625) */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CSS grid</title>
       <link href="/fe/CSS/2.css-grid/"/>
       <url>/fe/CSS/2.css-grid/</url>
