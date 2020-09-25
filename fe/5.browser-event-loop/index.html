@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>浏览器的 EventLoop | 守得云开见月明</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">浏览器的 EventLoop</h1><a id="logo" href="/.">守得云开见月明</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">浏览器的 EventLoop</h1><div class="post-meta">2020-05-22<span> | </span><span class="category"><a href="/categories/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="post-content"><h4 id="浏览器的内核：-Render-进程"><a href="#浏览器的内核：-Render-进程" class="headerlink" title="浏览器的内核： Render 进程"></a>浏览器的内核： Render 进程</h4><ul>
+<li>GUI渲染线程</li>
+<li>JavaScript 引擎线程 （Chrome v8）</li>
+<li>事件触发线程</li>
+<li>定时器线程</li>
+<li>异步 HTTP 请求线程</li>
+</ul>
+<h4 id="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"><a href="#JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。" class="headerlink" title="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"></a>JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。</h4><h4 id="1-异步线程"><a href="#1-异步线程" class="headerlink" title="1. 异步线程"></a>1. 异步线程</h4><ul>
+<li>网络请求<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(url).then(<span class="function"><span class="params">res</span> =&gt;</span> res.json()).then(<span class="built_in">console</span>.log);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li>定时器<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(fn, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li>事件触发<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>);</span><br><span class="line">btn.addEventListener(<span class="string">'click'</span>, () =&gt; <span class="built_in">console</span>.log(<span class="string">'clicked btn'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> timeoutId = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    clearTimeout(timeoutId);</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
+在执行 <code>console.log(&#39;hello&#39;)</code> 的时候，点击按钮，不会立刻执行绑定的事件，JS引擎处于阻塞状态。</li>
+</ul>
+<h4 id="2-任务队列-Task-Queue"><a href="#2-任务队列-Task-Queue" class="headerlink" title="2. 任务队列 Task Queue"></a>2. 任务队列 Task Queue</h4><img class="article-image" src="/images/fe/browser-event-loop.png" width="500" alt="Browser Event Loop" />
+
+<ul>
+<li>JS引擎从上到下将程序入栈出栈的过程中，遇到那些有异步能力的 WebApi，会选择把他们放入他们自己的线程中，短暂的忽略他们。继续执行那些同步代码。</li>
+<li>在各自的线程里完成处理之后，会将这些异步结果以回调的形式放入 Task Queue 中。</li>
+<li>等待JS引擎空闲，再次回到JS引擎中。</li>
+</ul>
+<h4 id="3-Event-Loop-（浏览器）"><a href="#3-Event-Loop-（浏览器）" class="headerlink" title="3. Event Loop （浏览器）"></a>3. Event Loop （浏览器）</h4><ul>
+<li>任务队列和JS主引擎之间的桥梁。</li>
+<li>它被设计出来的目的也就是为了保证JS引擎线程的安全和稳定的。</li>
+<li>其实是在把异步转化为同步。</li>
+<li>An event loop has one or more task queues. A task queue is a set of tasks.</li>
+</ul>
+<h4 id="4-1-宏任务队列-Macrotask-Queue"><a href="#4-1-宏任务队列-Macrotask-Queue" class="headerlink" title="4.1 宏任务队列 Macrotask Queue"></a>4.1 宏任务队列 Macrotask Queue</h4><ul>
+<li>setTimeout</li>
+<li>setInterval</li>
+</ul>
+<h4 id="4-2-微任务队列-Microtask-Queue"><a href="#4-2-微任务队列-Microtask-Queue" class="headerlink" title="4.2 微任务队列 Microtask Queue"></a>4.2 微任务队列 Microtask Queue</h4><ul>
+<li>Promise</li>
+<li>process.nextTick</li>
+<li>MutationObserver</li>
+</ul>
+<p>MicroTask 会在一次 EventLoop 中全部执行完。</p>
+<ul>
+<li>同步（主线程执行栈清空）-&gt; 微任务（全部） -&gt; 宏任务（第一个） -&gt; 微（全部）-&gt; 宏（一个）-&gt; …</li>
+</ul>
+<h4 id="5-其他关于浏览器加载资源阻塞"><a href="#5-其他关于浏览器加载资源阻塞" class="headerlink" title="5. 其他关于浏览器加载资源阻塞"></a>5. 其他关于浏览器加载资源阻塞</h4><ul>
+<li>script<img class="article-image" src="/images/fe/script-async-defer.jpeg" width="500" alt="<script> async defer" />
+
+
+</li>
+</ul>
+<ul>
+<li>css 加载不会阻塞 DOM 树的解析</li>
+<li>css 加载会阻塞 DOM 树的渲染</li>
+<li>css 加载会阻塞后面 js 语句的执行</li>
+</ul>
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a><a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/"><i class="fa fa-tag"></i>浏览器</a></div><div class="post-nav"><a class="pre" href="/fe/6.promise.resolve.then/">Promise.resolve().then</a><a class="next" href="/fe/4.node-event-loop/">Node 中的 EventLoop</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%91%84%E5%BD%B1/">摄影</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Cookie/" style="font-size: 15px;">Cookie</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/uni-app/" style="font-size: 15px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 15px;">小程序</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/%E7%99%BE%E5%A7%93%E7%BD%91/" style="font-size: 15px;">百姓网</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/VSCode/" style="font-size: 15px;">VSCode</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 15px;">浏览器</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">工具</a> <a href="/tags/Nginx/" style="font-size: 15px;">Nginx</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/RX100M7/" style="font-size: 15px;">RX100M7</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 15px;">部署</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/fe/11.grid/">CSS grid</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/10.bx-prm/">百姓代理商平台</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/9.sse-vs-websocket/">SSE 与 WebSocket</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/8.gzip-webpack-nginx/">双端支持 gzip 优化网页加载</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/7.ios-tap-border/">IOS 浏览器 点击会出现黑色阴影</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/2.webpack-evnironment/">Webpack 分环境打包结构</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/6.promise.resolve.then/">Promise.resolve().then</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/5.browser-event-loop/">浏览器的 EventLoop</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/4.node-event-loop/">Node 中的 EventLoop</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/3.usecallback/">useCallback 易忽略的一个小误区</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2020 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

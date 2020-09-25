@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>CSS grid</title>
+      <link href="/fe/11.grid/"/>
+      <url>/fe/11.grid/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"item"</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  设为网格布局以后，容器子元素（项目）的float、display: inline-block、display: table-cell、vertical-align和column-*等设置都将失效。 </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid | inline-grid;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 定义每列、行的宽高 */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: ... | ...; <span class="comment">/* 定义每一列的列宽 */</span></span><br><span class="line">  <span class="attribute">grid-template-rows</span>: ... | ...; <span class="comment">/* 定义每一行的行高 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* repeat */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">40px</span> <span class="number">50px</span> auto <span class="number">50px</span> <span class="number">40px</span>;</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="number">25%</span> <span class="number">25%</span> <span class="number">25%</span>; <span class="comment">/* 等同于下面使用 repeat */</span></span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="built_in">repeat</span>(<span class="number">3</span>, <span class="number">25%</span>); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 解读 */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: [first] <span class="number">40px</span> [line2] <span class="number">50px</span> [line3] auto [col4-start] <span class="number">50px</span> [five] <span class="number">40px</span> [end];</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: [row1-start] <span class="number">25%</span> [row1-end row2-start] <span class="number">100px</span> [third-line] auto [last-line];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 为什么要命名 */</span></span><br><span class="line"><span class="comment">/* 给Grid布局中的分隔线命名，为的就是可以更好地对区域进行描述。如果我们没有描述某片区域的的需求，自然也不需要命名了。（ZXX） */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* fr：fraction 分数 */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="comment">/* 三等分 */</span></span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr; </span><br><span class="line">  <span class="comment">/* 固定值，然后三等分剩下的大小 */</span></span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">200px</span> <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="comment">/* 此处auto仅仅是包裹第一个网格，不会拉伸 */</span></span><br><span class="line">  <span class="attribute">grid-template-columns</span>: auto <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* grid-template-areas */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">grid-template-areas</span>: </span><br><span class="line">    <span class="string">"&lt;grid-area-name&gt; | . | none | ..."</span></span><br><span class="line">    <span class="string">"..."</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 支持中文区域名称 */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line">  <span class="attribute">grid-template-areas</span>: </span><br><span class="line">    <span class="string">"葡萄 葡萄 葡萄"</span></span><br><span class="line">    <span class="string">"龙虾 养鱼 养鱼"</span></span><br><span class="line">    <span class="string">"龙虾 养鱼 养鱼"</span></span><br><span class="line">    <span class="string">"西瓜 西瓜 西瓜"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 如果我们给网格区域命了名，但是没有给网格线命名，则会自动根据网格区域名称生成网格线名称，规则是区域名称后面加-start和-end。例如，某网格区域名称是“葡萄”，则左侧column线名称就是“葡萄-start”，左侧column线名称就是“葡萄-end”。 */</span></span><br></pre></td></tr></table></figure><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"putao"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"longxia"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"yangyu"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"xigua"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* grid-template */</span></span><br><span class="line"><span class="comment">/* grid-template是grid-template-rows，grid-template-columns和grid-template-areas属性的缩写。 */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">grid-template</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">grid-template</span>: &lt;grid-template-rows&gt; / &lt;grid-template-columns&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid-template</span>: </span><br><span class="line">    <span class="string">"葡萄 葡萄 葡萄"</span> <span class="number">1</span>fr </span><br><span class="line">    <span class="string">"龙虾 养鱼 养鱼"</span> <span class="number">1</span>fr </span><br><span class="line">    <span class="string">"龙虾 养鱼 养鱼"</span> <span class="number">1</span>fr </span><br><span class="line">    <span class="string">"西瓜 西瓜 西瓜"</span> <span class="number">1</span>fr</span><br><span class="line">    /<span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 推荐用 grid 代替 grid-template */</span></span><br><span class="line">  <span class="attribute">grid</span>: <span class="number">100px</span> <span class="number">300px</span> / auto-flow <span class="number">200px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 以上等同于 */</span></span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="number">100px</span> <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">grid-auto-flow</span>: column;</span><br><span class="line">  <span class="attribute">grid-auto-columns</span>: <span class="number">200px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid</span>: [ auto-flow &amp;&amp; dense? ] &lt;grid-auto-rows&gt;? / &lt;grid-template-columns&gt;;</span><br><span class="line">  <span class="attribute">grid</span>: &lt;grid-template-rows&gt; / [ auto-flow &amp;&amp; dense? ] &lt;grid-auto-columns&gt;?;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="Grid-Container-的全部属性"><a href="#Grid-Container-的全部属性" class="headerlink" title="Grid Container 的全部属性"></a>Grid Container 的全部属性</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 斜杠前面都是rows相关属性，斜杠后面都是columns相关属性 */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid | inline-grid | subgrid;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">grid-template-columns</span>: &lt;track-size&gt; ... | &lt;line-name&gt; &lt;track-size&gt; ...;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">grid-template-rows</span>: &lt;track-size&gt; ... | &lt;line-name&gt; &lt;track-size&gt; ...;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">grid-template-areas</span>:</span><br><span class="line">    <span class="string">"header header header header"</span></span><br><span class="line">    <span class="string">"main main . sidebar"</span></span><br><span class="line">    <span class="string">"footer footer footer footer"</span>;</span><br><span class="line">    </span><br><span class="line">  <span class="attribute">grid-template</span>: none | subgrid | &lt;grid-template-rows&gt; / &lt;grid-template-columns&gt;;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">grid-template</span>: [row1-start] <span class="string">"header header header"</span> <span class="number">25px</span> [row1-end]</span><br><span class="line">    [row2-start] <span class="string">"footer footer footer"</span> <span class="number">25px</span> [row2-end]</span><br><span class="line">    / auto <span class="number">50px</span> auto;</span><br><span class="line">    </span><br><span class="line">  <span class="attribute">grid-column-gap</span>: &lt;line-size&gt;;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">grid-row-gap</span>: &lt;line-size&gt;;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">grid-gap</span>: &lt;grid-row-gap&gt; &lt;grid-column-gap&gt;;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* 现在用 */</span></span><br><span class="line">  <span class="attribute">gap</span>: &lt;grid-row-gap&gt; &lt;grid-column-gap&gt;;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">justify-items</span>: start | end | center | stretch;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">align-items</span>: start | end | center | stretch;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">justify-content</span>: start | end | center | stretch | space-around | space-between | space-evenly;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">align-content</span>: start | end | center | stretch | space-around | space-between | space-evenly;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">place-content</span>: &lt;align-content&gt; &lt;justify-content&gt;;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* 隐式的网格宽度 */</span></span><br><span class="line">  <span class="attribute">grid-auto-columns</span>: &lt;track-size&gt; ...;</span><br><span class="line">   </span><br><span class="line">  <span class="attribute">grid-auto-rows</span>: &lt;track-size&gt; ...;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">grid-auto-flow</span>: row | column | row dense | column dense;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* dense这个英文是稠密的意思。如果有设置，则表示自动排列启用“密集”打包算法。如果稍后出现的网格比较小，则尝试看看前面有没有合适的地方放置，使网格尽可能稠密紧凑。此属性值仅仅改变视觉顺序，会导致DOM属性和实际呈现顺序不符合，这对于可访问性是不友好的，建议谨慎使用。 */</span></span><br><span class="line">  <span class="attribute">grid</span>: &lt;grid-template-rows&gt; / [ auto-flow &amp;&amp; dense? ] &lt;grid-auto-columns&gt;?;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="Grid-Items-的全部属性"><a href="#Grid-Items-的全部属性" class="headerlink" title="Grid Items 的全部属性"></a>Grid Items 的全部属性</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">grid-column-start</span>: &lt;number&gt; | &lt;name&gt; | span &lt;number&gt; | span &lt;name&gt; | auto;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid-column-end</span>: &lt;number&gt; | &lt;name&gt; | span &lt;number&gt; | span &lt;name&gt; | auto;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid-row-start</span>: &lt;number&gt; | &lt;name&gt; | span &lt;number&gt; | span &lt;name&gt; | auto;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid-row-end</span>: &lt;number&gt; | &lt;name&gt; | span &lt;number&gt; | span &lt;name&gt; | auto;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid-column</span>: &lt;start-line&gt; / &lt;end-line&gt; | &lt;start-line&gt; / span &lt;value&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid-row</span>: &lt;start-line&gt; / &lt;end-line&gt; | &lt;start-line&gt; / span &lt;value&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">grid-area</span>: &lt;name&gt; | &lt;row-start&gt; / &lt;column-start&gt; / &lt;row-end&gt; / &lt;column-end&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">justify-self</span>: stretch | start | end | center;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">align-self</span>: stretch | start | end | center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p><a href="https://www.zhangxinxu.com/wordpress/2018/11/display-grid-css-css3/?shrink=1#grid-template-columns-rows" target="_blank" rel="noopener">张鑫旭 CSS Grid</a></p><p><a href="https://zhuanlan.zhihu.com/p/33030746" target="_blank" rel="noopener">Grid布局完整指南</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>百姓代理商平台</title>
+      <link href="/fe/10.bx-prm/"/>
+      <url>/fe/10.bx-prm/</url>
+      
+        <content type="html"><![CDATA[<img src="/images/fe/prm.baixing.com.cn.png" style="max-width:300px; margin:auto;" alt="百姓网代理商招商" /><br /><img src="/images/fe/prm-desktop.png" width="100%" alt="百姓网代理商招商 PC" /><br />]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+            <tag> 百姓网 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>SSE 与 WebSocket</title>
+      <link href="/fe/9.sse-vs-websocket/"/>
+      <url>/fe/9.sse-vs-websocket/</url>
+      
+        <content type="html"><![CDATA[<p>SSE与WebSocket有相似功能，都是用来建立浏览器与服务器之间的通信渠道。两者的区别在于：</p><ul><li>WebSocket是全双工通道，可以双向通信，功能更强；SSE是单向通道，只能服务器向浏览器端发送。</li><li>WebSocket是一个新的协议，需要服务器端支持；SSE则是- 部署在 HTTP协议之上的，现有的服务器软件都支持。</li><li>SSE是一个轻量级协议，相对简单；WebSocket是一种较重的协议，相对复杂。</li><li>SSE默认支持断线重连，WebSocket则需要额外部署。</li><li>SSE支持自定义发送的数据类型。</li><li>SSE不支持CORS 参数url就是服务器网址，必须与当前网页的网址在同一个网域（domain），而且协议和端口都必须相同。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+            <tag> HTTP </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>双端支持 gzip 优化网页加载</title>
+      <link href="/fe/8.gzip-webpack-nginx/"/>
+      <url>/fe/8.gzip-webpack-nginx/</url>
+      
+        <content type="html"><![CDATA[<h3 id="1-Nginx-打开-gzip-可以压缩文件，减少浏览器访问时需要下载的文件大小，从而加速网页打开"><a href="#1-Nginx-打开-gzip-可以压缩文件，减少浏览器访问时需要下载的文件大小，从而加速网页打开" class="headerlink" title="1. Nginx 打开 gzip 可以压缩文件，减少浏览器访问时需要下载的文件大小，从而加速网页打开"></a>1. Nginx 打开 gzip 可以压缩文件，减少浏览器访问时需要下载的文件大小，从而加速网页打开</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 nginx.conf server 中添加下面的配置即可</span></span><br><span class="line">gzip on;</span><br><span class="line">gzip_buffers 32 4K;</span><br><span class="line">gzip_comp_level 6;</span><br><span class="line">gzip_min_length 100;</span><br><span class="line">gzip_types application/javascript text/css text/xml;</span><br><span class="line">gzip_vary on;</span><br></pre></td></tr></table></figure><h3 id="2-由于这样压缩会占用服务器-cpu-资源，所以压缩可以由前端打包的时候来做"><a href="#2-由于这样压缩会占用服务器-cpu-资源，所以压缩可以由前端打包的时候来做" class="headerlink" title="2. 由于这样压缩会占用服务器 cpu 资源，所以压缩可以由前端打包的时候来做"></a>2. 由于这样压缩会占用服务器 cpu 资源，所以压缩可以由前端打包的时候来做</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack 中配置</span></span><br><span class="line"><span class="keyword">const</span> CompressionWebpackPlugin = <span class="built_in">require</span>(<span class="string">'compression-webpack-plugin'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> CompressionWebpackPlugin(&#123;</span><br><span class="line">  test: <span class="regexp">/\.js$|\.html$|\.css$/</span>,</span><br><span class="line">  <span class="comment">// 超过4kb压缩</span></span><br><span class="line">  threshold: <span class="number">4096</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure><h4 id="这样就可以打包生成-js-的同时，生成压缩后的相应文件-js-gz，一并传到服务器"><a href="#这样就可以打包生成-js-的同时，生成压缩后的相应文件-js-gz，一并传到服务器" class="headerlink" title="这样就可以打包生成 .js 的同时，生成压缩后的相应文件 .js.gz，一并传到服务器"></a>这样就可以打包生成 <code>.js</code> 的同时，生成压缩后的相应文件 <code>.js.gz</code>，一并传到服务器</h4><h5 id="虽然也可以只传-gz-文件，但都上传更保险（为了要兼容不支持-gzip-的浏览器）"><a href="#虽然也可以只传-gz-文件，但都上传更保险（为了要兼容不支持-gzip-的浏览器）" class="headerlink" title="虽然也可以只传 .gz 文件，但都上传更保险（为了要兼容不支持 gzip 的浏览器）"></a>虽然也可以只传 <code>.gz</code> 文件，但都上传更保险（为了要兼容不支持 gzip 的浏览器）</h5><h4 id="Ngnix-中打开-gzip-static，就可以优先使用已有的压缩文件，不用-Nginx-再压缩"><a href="#Ngnix-中打开-gzip-static，就可以优先使用已有的压缩文件，不用-Nginx-再压缩" class="headerlink" title="Ngnix 中打开 gzip_static，就可以优先使用已有的压缩文件，不用 Nginx 再压缩"></a><code>Ngnix</code> 中打开 <code>gzip_static</code>，就可以优先使用已有的压缩文件，不用 <code>Nginx</code> 再压缩</h4><p>需要安装 <a href="http://nginx.org/en/docs/http/ngx_http_gzip_static_module.html" target="_blank" rel="noopener">ngx_http_gzip_static_module</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gzip_static on; <span class="comment"># 已有.gz文件则直接用，不需要再压缩</span></span><br></pre></td></tr></table></figure><h4 id="3-项目中这么运用发现-gzip-static-不起作用"><a href="#3-项目中这么运用发现-gzip-static-不起作用" class="headerlink" title="3. 项目中这么运用发现 gzip_static 不起作用"></a>3. 项目中这么运用发现 <code>gzip_static</code> 不起作用</h4><p>在配置完后，发现浏览器中返回的文件，带有 <code>Content-Encoding: gzip</code> 但大小和 <code>Webpack</code> 打包时的 <code>.gz</code> 文件不一致，猜想服务器返回的还是由 <code>Nginx</code> 压缩生成的文件。</p><p>原因是该项目中用了 <code>proxy_pass</code> 反代所以不支持 <code>gzip_static</code></p><h4 id="4-就是只想上传-gz-文件，不传原文件"><a href="#4-就是只想上传-gz-文件，不传原文件" class="headerlink" title="4. 就是只想上传 .gz 文件，不传原文件"></a>4. 就是只想上传 <code>.gz</code> 文件，不传原文件</h4><p>安装 <a href="http://nginx.org/en/docs/http/ngx_http_gunzip_module.html" target="_blank" rel="noopener">ngx_http_gunzip_module</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 nginx.conf 中打开</span></span><br><span class="line">gunzip on;</span><br></pre></td></tr></table></figure><p>即可不用上传压缩前的文件了</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Webpack </tag>
+            
+            <tag> 工具 </tag>
+            
+            <tag> Nginx </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>IOS 浏览器 点击会出现黑色阴影</title>
+      <link href="/fe/7.ios-tap-border/"/>
+      <url>/fe/7.ios-tap-border/</url>
+      
+        <content type="html"><![CDATA[<p>太久不写C端的界面和适配，忘了兼容有多可怕…</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.remove-ios-tap-shadow</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-tap-highlight-color</span>: transparent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Webpack 分环境打包结构</title>
+      <link href="/webpack/2.webpack-evnironment/"/>
+      <url>/webpack/2.webpack-evnironment/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.common.js</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> resolve = <span class="function">(<span class="params">dir</span>) =&gt;</span> path.resolve(__dirname, dir);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: [</span><br><span class="line">    resolve(<span class="string">'./src/index.tsx'</span>)</span><br><span class="line">  ],</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: resolve(<span class="string">'./dist'</span>),</span><br><span class="line">    publicPath: <span class="string">'/'</span>,</span><br><span class="line">    filename: <span class="string">'[name].[hash].js'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.tsx?$/</span>,</span><br><span class="line">        use: <span class="string">'ts-loader'</span>,</span><br><span class="line">        exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(js|jsx)$/</span>,</span><br><span class="line">        exclude: [</span><br><span class="line">          resolve(<span class="string">'./node_modules'</span>),</span><br><span class="line">          resolve(<span class="string">'./dist'</span>),</span><br><span class="line">        ],</span><br><span class="line">        use: [<span class="string">'babel-loader'</span>],</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.css$|\.scss$/</span>,</span><br><span class="line">        use: [</span><br><span class="line">          <span class="string">'style-loader'</span>,</span><br><span class="line">          <span class="string">'css-loader?url=false'</span>,</span><br><span class="line">          <span class="string">'sass-loader'</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            loader: <span class="string">'sass-resources-loader'</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">              resources: [resolve(<span class="string">'./src/assets/sass/variables.scss'</span>)],</span><br><span class="line">              caches: <span class="literal">true</span></span><br><span class="line">            &#125;,</span><br><span class="line">          &#125;,</span><br><span class="line">        ],</span><br><span class="line">        include: [</span><br><span class="line">          resolve(<span class="string">'./src'</span>),</span><br><span class="line">          resolve(<span class="string">'./node_modules/normalize.css'</span>),</span><br><span class="line">          resolve(<span class="string">'./node_modules/react-toastify/dist/ReactToastify.css'</span>),</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.jpe?g$|\.png$|\.svg$|\.woff$|\.ttf$/</span>,</span><br><span class="line">        loader: <span class="string">'file-loader?name=[name].[ext]'</span></span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    extensions: [<span class="string">'.js'</span>, <span class="string">'.jsx'</span>, <span class="string">'.es6'</span>, <span class="string">'.ts'</span>, <span class="string">'.tsx'</span>],</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="string">'@'</span>: resolve(<span class="string">'src'</span>),</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      template: resolve(<span class="string">'./public/index.html'</span>),</span><br><span class="line">      favicon: resolve(<span class="string">'./src/assets/images/favicon.svg'</span>),</span><br><span class="line">      title: <span class="string">'Caching'</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> webpack.HotModuleReplacementPlugin(),</span><br><span class="line">  ],</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    historyApiFallback: <span class="literal">true</span>,</span><br><span class="line">    hot: <span class="literal">true</span>,</span><br><span class="line">    proxy: &#123;</span><br><span class="line">      <span class="string">'/api/**'</span>: &#123;</span><br><span class="line">        target: <span class="string">'http://dev-api.baixing.cn'</span>,</span><br><span class="line">        changeOrigin: <span class="literal">true</span>,</span><br><span class="line">        secure: <span class="literal">false</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.dev.js</span></span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>);</span><br><span class="line"><span class="keyword">const</span> common = <span class="built_in">require</span>(<span class="string">'../webpack.common.js'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> dotenv = <span class="built_in">require</span>(<span class="string">'dotenv'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> resolve = <span class="function">(<span class="params">dir</span>) =&gt;</span> path.resolve(__dirname, dir);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> envFile = dotenv.config(&#123; <span class="attr">path</span>: resolve(<span class="string">'../.env.dev'</span>) &#125;).parsed</span><br><span class="line"><span class="keyword">const</span> envKeys = <span class="built_in">Object</span>.keys(envFile).reduce(<span class="function">(<span class="params">prev, next</span>) =&gt;</span> &#123;</span><br><span class="line">  prev[<span class="string">`process.env.<span class="subst">$&#123;next&#125;</span>`</span>] = <span class="built_in">JSON</span>.stringify(envFile[next]);</span><br><span class="line">  <span class="keyword">return</span> prev;</span><br><span class="line">&#125;, &#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(common, &#123;</span><br><span class="line">  mode: <span class="string">'development'</span>,</span><br><span class="line">  devtool: <span class="string">'inline-source-map'</span>,</span><br><span class="line">  output: &#123;</span><br><span class="line">    publicPath: <span class="string">'/promotion/'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.DefinePlugin(envKeys)</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">"scripts": &#123;</span><br><span class="line">    "start": "webpack-dev-server --open --config ./config/webpack.local.js",</span><br><span class="line">    "build-dev": "webpack --config ./config/webpack.dev.js",</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Webpack </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Promise.resolve().then</title>
+      <link href="/fe/6.promise.resolve.then/"/>
+      <url>/fe/6.promise.resolve.then/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.resolve().then(doSomething);</span><br></pre></td></tr></table></figure><ul><li>Promise 是立即执行的，它创建的时候就会执行，不存在将 Promise 推入微任务中的说法；</li><li>resolve() 是用来表示 Promise 的状态为 fulfilled，相当于只是定义了一个有状态的 Promise，但是并没有调用它；</li><li>Promise 调用 then 的前提是 Promise 的状态为 fulfilled；</li><li>只有 Promise 调用 then 的时候，then 里面的函数才会被推入微任务中；</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>浏览器的 EventLoop</title>
+      <link href="/fe/5.browser-event-loop/"/>
+      <url>/fe/5.browser-event-loop/</url>
+      
+        <content type="html"><![CDATA[<h4 id="浏览器的内核：-Render-进程"><a href="#浏览器的内核：-Render-进程" class="headerlink" title="浏览器的内核： Render 进程"></a>浏览器的内核： Render 进程</h4><ul><li>GUI渲染线程</li><li>JavaScript 引擎线程 （Chrome v8）</li><li>事件触发线程</li><li>定时器线程</li><li>异步 HTTP 请求线程</li></ul><h4 id="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"><a href="#JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。" class="headerlink" title="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"></a>JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。</h4><h4 id="1-异步线程"><a href="#1-异步线程" class="headerlink" title="1. 异步线程"></a>1. 异步线程</h4><ul><li>网络请求<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(url).then(<span class="function"><span class="params">res</span> =&gt;</span> res.json()).then(<span class="built_in">console</span>.log);</span><br></pre></td></tr></table></figure></li></ul><ul><li>定时器<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(fn, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></li></ul><ul><li>事件触发<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>);</span><br><span class="line">btn.addEventListener(<span class="string">'click'</span>, () =&gt; <span class="built_in">console</span>.log(<span class="string">'clicked btn'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> timeoutId = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    clearTimeout(timeoutId);</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>在执行 <code>console.log(&#39;hello&#39;)</code> 的时候，点击按钮，不会立刻执行绑定的事件，JS引擎处于阻塞状态。</li></ul><h4 id="2-任务队列-Task-Queue"><a href="#2-任务队列-Task-Queue" class="headerlink" title="2. 任务队列 Task Queue"></a>2. 任务队列 Task Queue</h4><img class="article-image" src="/images/fe/browser-event-loop.png" width="500" alt="Browser Event Loop" /><ul><li>JS引擎从上到下将程序入栈出栈的过程中，遇到那些有异步能力的 WebApi，会选择把他们放入他们自己的线程中，短暂的忽略他们。继续执行那些同步代码。</li><li>在各自的线程里完成处理之后，会将这些异步结果以回调的形式放入 Task Queue 中。</li><li>等待JS引擎空闲，再次回到JS引擎中。</li></ul><h4 id="3-Event-Loop-（浏览器）"><a href="#3-Event-Loop-（浏览器）" class="headerlink" title="3. Event Loop （浏览器）"></a>3. Event Loop （浏览器）</h4><ul><li>任务队列和JS主引擎之间的桥梁。</li><li>它被设计出来的目的也就是为了保证JS引擎线程的安全和稳定的。</li><li>其实是在把异步转化为同步。</li><li>An event loop has one or more task queues. A task queue is a set of tasks.</li></ul><h4 id="4-1-宏任务队列-Macrotask-Queue"><a href="#4-1-宏任务队列-Macrotask-Queue" class="headerlink" title="4.1 宏任务队列 Macrotask Queue"></a>4.1 宏任务队列 Macrotask Queue</h4><ul><li>setTimeout</li><li>setInterval</li></ul><h4 id="4-2-微任务队列-Microtask-Queue"><a href="#4-2-微任务队列-Microtask-Queue" class="headerlink" title="4.2 微任务队列 Microtask Queue"></a>4.2 微任务队列 Microtask Queue</h4><ul><li>Promise</li><li>process.nextTick</li><li>MutationObserver</li></ul><p>MicroTask 会在一次 EventLoop 中全部执行完。</p><ul><li>同步（主线程执行栈清空）-&gt; 微任务（全部） -&gt; 宏任务（第一个） -&gt; 微（全部）-&gt; 宏（一个）-&gt; …</li></ul><h4 id="5-其他关于浏览器加载资源阻塞"><a href="#5-其他关于浏览器加载资源阻塞" class="headerlink" title="5. 其他关于浏览器加载资源阻塞"></a>5. 其他关于浏览器加载资源阻塞</h4><ul><li>script<img class="article-image" src="/images/fe/script-async-defer.jpeg" width="500" alt="<script> async defer" /></li></ul><ul><li>css 加载不会阻塞 DOM 树的解析</li><li>css 加载会阻塞 DOM 树的渲染</li><li>css 加载会阻塞后面 js 语句的执行</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+            <tag> 浏览器 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Node 中的 EventLoop</title>
+      <link href="/fe/4.node-event-loop/"/>
+      <url>/fe/4.node-event-loop/</url>
+      
+        <content type="html"><![CDATA[<h3 id="Node-js-中的-Event-Loop"><a href="#Node-js-中的-Event-Loop" class="headerlink" title="Node.js 中的 Event Loop"></a>Node.js 中的 Event Loop</h3><img class="article-image" src="/images/fe/event-loop.png" alt="Event Loop" />I/O：读写操作、输入输出、请求响应<h4 id="1-setImmediate"><a href="#1-setImmediate" class="headerlink" title="1. setImmediate()"></a>1. setImmediate()</h4><ul><li>在 <code>Check</code> 阶段被执行</li><li>不会检查函数队列，而是检查 I/O 队列，当所有 I/O 在当前循环结束后会执行</li><li>只要 <code>poll</code> 队列为空，代码被 <code>setImmediate()</code>，无论是否有 <code>timers</code> 达到下限时间，<code>setImmediate()</code> 的代码都先执行。</li></ul><h4 id="2-setTimeout-fn-0"><a href="#2-setTimeout-fn-0" class="headerlink" title="2. setTimeout(fn, 0)"></a>2. setTimeout(fn, 0)</h4><ul><li>在 <code>Timer</code> 阶段被执行</li><li>回调会被安排在 <code>Timer</code> 队列中</li><li>The timer phase is the first phase but is called after the I/O phase as well as the Check phase.</li></ul><h4 id="2-2-setImmediate-和-setTimeout-fn-0-为什么有时候顺序随机？"><a href="#2-2-setImmediate-和-setTimeout-fn-0-为什么有时候顺序随机？" class="headerlink" title="2.2 setImmediate() 和 setTimeout(fn, 0) 为什么有时候顺序随机？"></a>2.2 setImmediate() 和 setTimeout(fn, 0) 为什么有时候顺序随机？</h4><p>在 <code>Node</code> 中执行下面的代码，会出现两种输出结果</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setTimeout'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setImmediate'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// output</span></span><br><span class="line">setImmediate</span><br><span class="line">setTimeout</span><br><span class="line"></span><br><span class="line"><span class="comment">// output</span></span><br><span class="line">setTimeout</span><br><span class="line">setImmediate</span><br></pre></td></tr></table></figure><p>一次循环首先进入的是 <code>timers</code> 阶段，进入这个阶段后，主线程会检查一下当前时间，是否满足定时器的条件。如果满足就执行回调函数，否则就离开这个阶段。所以如果进入之前一毫秒已经过去了，那么 <code>setTimeout</code> 的回调会首先执行。<code>setTimeout</code> 最小值是 <code>&gt;= 1ms/4ms</code>，<code>0</code> 会被转成 <code>&gt;= 1ms/4ms</code> 根据具体情况确定</p><p>而下面这样就只会出现唯一的结果</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line">fs.readFile(<span class="string">"my-file-path.txt"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"SETTIMEOUT"</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  setImmediate(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"SETIMMEDIATE"</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//run it</span></span><br><span class="line">node index.js</span><br><span class="line"></span><br><span class="line"><span class="comment">//output (always)</span></span><br><span class="line">SETIMMEDIATE</span><br><span class="line">SETTIMEOUT</span><br></pre></td></tr></table></figure><p>因为 <code>fs.readFile</code> 的回调是在 <code>poll</code> 阶段执行的，当其回调执行完毕之后，<code>poll</code> 队列为空，而 <code>setTimeout</code> 入了 <code>timers</code> 队列，此时有代码被 <code>setImmediate()</code>，于是时间循环进入 <code>check</code> 阶段执行回调，之后再下一个时间循环再进入 <code>timers</code> 阶段。<br>整个顺序是:</p><ul><li>循环开始，没有 <code>timer</code>，没有 <code>I/O 回调</code></li><li>fs.readFile 执行，把回调加入 <code>I/O Callbacks</code></li><li>进入 <code>poll</code> 阶段，等待文件读取</li><li>第二轮循环</li><li>有 <code>I/O 回调</code>，进入 <code>I/O Callbacks</code> 阶段执行 fs.readFile 的回调</li><li>随后循环进入 <code>check</code> 阶段，发现有 <code>setImmediate</code> 回调，执行</li><li>之后下一轮循环才又回到 <code>timers</code> 阶段，这时才执行 <code>setTimeout</code> 的回调</li></ul><h4 id="3-process-nextTick"><a href="#3-process-nextTick" class="headerlink" title="3. process.nextTick()"></a>3. process.nextTick()</h4><ul><li>当前操作结束后就执行，和 Event Loop 状态无关，几乎是同步的，在本轮循环就安排执行</li><li>安排在 <code>nextTickQueue</code></li><li>会阻塞 I/O，阻塞 Promise</li></ul><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Start'</span>);</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'PR1'</span>));</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'TO1'</span>), <span class="number">0</span>);</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'PR2'</span>));</span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'IM1'</span>));</span><br><span class="line">process.nextTick(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'NT1'</span>));</span><br><span class="line">fs.readFile(<span class="string">"./profile"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"SETTIMEOUT"</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  process.nextTick(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'NT2'</span>));</span><br><span class="line">  setImmediate(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"SETIMMEDIATE"</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'IM2'</span>));</span><br><span class="line">process.nextTick(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'NT3'</span>));</span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'IM3'</span>));</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'PR3'</span>));</span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'IM4'</span>));</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Done'</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'STDone'</span>), <span class="number">1500</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// output</span></span><br><span class="line">Start <span class="comment">// i---1</span></span><br><span class="line">Done <span class="comment">// i---1</span></span><br><span class="line">NT1</span><br><span class="line">NT3</span><br><span class="line">PR1</span><br><span class="line">PR2</span><br><span class="line">PR3</span><br><span class="line">TO1</span><br><span class="line">NT2</span><br><span class="line">IM1</span><br><span class="line">IM2</span><br><span class="line">IM3</span><br><span class="line">IM4</span><br><span class="line">SETIMMEDIATE</span><br><span class="line">SETTIMEOUT</span><br><span class="line">STDone</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在浏览器中 IM 永远会比 T0 先执行</span></span><br></pre></td></tr></table></figure><h4 id="4-Promise-resolve-then"><a href="#4-Promise-resolve-then" class="headerlink" title="4. Promise.resolve().then"></a>4. Promise.resolve().then</h4><ul><li>这个其实没有把回调安排到下一个循环和 <code>process.nextTick</code> 类似，在本轮循环就安排了</li><li>会进入异步任务里面的”微任务”（microtask）队列</li><li><code>同步任务</code> 结束后 <code>nextTickQueue</code> 结束后 <code>microTaskQueue</code></li></ul><p>其他：</p><ol><li>Promises do swallow exceptions</li><li>创建了两个 Promises 出来，并且什么都没做就抛了第一个，Don’t create promises only to throw them away.</li><li>上述讨论也就在 <code>Node</code> 环境下<br>在浏览器中，基本只剩 <code>setTimeout</code> 和 <code>Promise.resolve().then</code><br>更多的需要关注浏览器的 <code>EventLoop</code></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>useCallback 易忽略的一个小误区</title>
+      <link href="/fe/3.usecallback/"/>
+      <url>/fe/3.usecallback/</url>
+      
+        <content type="html"><![CDATA[<h3 id="React-Hooks-中的-useCallback-其实并不能避免-function-在-render-时的-allocation"><a href="#React-Hooks-中的-useCallback-其实并不能避免-function-在-render-时的-allocation" class="headerlink" title="React Hooks 中的 useCallback 其实并不能避免 function 在 render 时的 allocation"></a>React Hooks 中的 useCallback 其实并不能避免 function 在 render 时的 allocation</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> FC = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [visible, setVisible] = useState(<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> handleShow = <span class="function"><span class="params">()</span> =&gt;</span> setVisible(<span class="literal">true</span>)</span><br><span class="line">  <span class="keyword">const</span> handleHide = <span class="function"><span class="params">()</span> =&gt;</span> setVisible(<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;button onClick=&#123;handleShow&#125;&gt;hide&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;handleHide&#125;&gt;hide&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure><p>上面的例子中，每次 FC 的渲染都会重新定义一次，<code>handleShow</code> 和 <code>handleHide</code> 两个 function</p><p>借助 <code>useCallback</code> 可以改写为：</p><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> FC = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [visible, setVisible] = useState(<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> handleShow = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> setVisible(<span class="literal">true</span>), [])</span><br><span class="line">  <span class="keyword">const</span> handleHide = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> setVisible(<span class="literal">false</span>), [])</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;button onClick=&#123;handleShow&#125;&gt;hide&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;handleHide&#125;&gt;hide&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure><h4 id="实际上，这样组件的性能会更差，因为-useCallback-并不能阻止这两个-function-被重新定义，反而增加了运算量："><a href="#实际上，这样组件的性能会更差，因为-useCallback-并不能阻止这两个-function-被重新定义，反而增加了运算量：" class="headerlink" title="实际上，这样组件的性能会更差，因为 useCallback 并不能阻止这两个 function 被重新定义，反而增加了运算量："></a>实际上，这样组件的性能会更差，因为 useCallback 并不能阻止这两个 function 被重新定义，反而增加了运算量：</h4><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> handleShow = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> setVisible(<span class="literal">true</span>), [])</span><br></pre></td></tr></table></figure><p>可以拆解成</p><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> handleShow = <span class="function"><span class="params">()</span> =&gt;</span> setVisitble(<span class="literal">true</span>)</span><br><span class="line">React.useCallback(handleShow, [])</span><br></pre></td></tr></table></figure><p>比原来还多一步</p><h4 id="真正需要-useCallback-的情形"><a href="#真正需要-useCallback-的情形" class="headerlink" title="真正需要 useCallback 的情形"></a>真正需要 useCallback 的情形</h4><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> FC = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [visible, setVisible] = useState(<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> handleShow = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> setVisible(<span class="literal">true</span>), [])</span><br><span class="line">  <span class="keyword">const</span> handleHide = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> setVisible(<span class="literal">false</span>), [])</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;Button onClick=&#123;handleShow&#125;&gt;show&lt;<span class="regexp">/Button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Button onClick=&#123;handleHide&#125;&gt;hide&lt;/</span>Button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">const Button = (props) =&gt; &#123;</span></span><br><span class="line"><span class="regexp">  const &#123; onClick &#125; = props</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">  useEffect(</span></span><br><span class="line"><span class="regexp">    () =&gt; &#123;</span></span><br><span class="line"><span class="regexp">      console.log(onClick) /</span><span class="regexp">/ 每次 onClick 改变，做些什么</span></span><br><span class="line"><span class="regexp">    &#125;,</span></span><br><span class="line"><span class="regexp">    [onClick]</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">  return (</span></span><br><span class="line"><span class="regexp">    &lt;button onClick=&#123;onClick&#125;&gt;&#123;props.children&#125;&lt;/</span>button&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>上面的这种情况，在 <code>&lt;Button&gt;</code> 组件中，用到了 <code>useEffect</code>。 而 <code>useEffect</code> 对于对象类型的 <code>props</code> 是比较他们的 <code>reference</code>，来判断要不要执行。</p><p>如果在 <code>FC</code> 中没有用 <code>useCallback</code>，那么每次 <code>FC</code> 的渲染都会定义全新的 <code>handleShow</code>（每次的 <code>reference</code> 都不一样），所以都会在 <code>&lt;Button&gt;</code> 中触发 <code>console.log(onClick)</code>。</p><p>所以 <code>useCallback</code> 就是用来控制相同的依赖参数下，是否需要保持这个 funciton 的 <code>reference</code>，而他并不能避免重新定义这个 function。</p><p>相关链接：<a href="https://kentcdodds.com/blog/usememo-and-usecallback" target="_blank" rel="noopener">When to useMemo and useCallback</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> React </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>VSCode 自动补全 JSX</title>
+      <link href="/fe/2.vscode-jsx/"/>
+      <url>/fe/2.vscode-jsx/</url>
+      
+        <content type="html"><![CDATA[<h4 id="在-setting-json-中加入"><a href="#在-setting-json-中加入" class="headerlink" title="在 setting.json 中加入"></a>在 setting.json 中加入</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"emmet.triggerExpansionOnTab"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line"><span class="string">"emmet.includeLanguages"</span>: &#123;</span><br><span class="line">    <span class="string">"javascript"</span>: <span class="string">"javascriptreact"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ts</span></span><br><span class="line"><span class="string">"tslint.exclude"</span>: <span class="literal">null</span>,</span><br><span class="line"><span class="string">"tslint.autoFixOnSave"</span>: <span class="literal">true</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> React </tag>
+            
+            <tag> VSCode </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>uni-app 初体验</title>
+      <link href="/fe/1.uni-app/"/>
+      <url>/fe/1.uni-app/</url>
+      
+        <content type="html"><![CDATA[<h3 id="多端"><a href="#多端" class="headerlink" title="多端"></a>多端</h3>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Vue </tag>
+            
+            <tag> uni-app </tag>
+            
+            <tag> 小程序 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>带 Cookie 去海边</title>
+      <link href="/cookie/3.haiwan-sea/"/>
+      <url>/cookie/3.haiwan-sea/</url>
+      
+        <content type="html"><![CDATA[<img class="article-image" src="/images/cookie/8.png" width="" alt="有点帅" /><br /><img class="article-image" src="/images/cookie/9.png" width="" alt="" /><br />]]></content>
+      
+      
+      <categories>
+          
+          <category> 摄影 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Cookie </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>百度智能云体验</title>
+      <link href="/tool/2.baidu-cloud-service/"/>
+      <url>/tool/2.baidu-cloud-service/</url>
+      
+        <content type="html"><![CDATA[<h3 id="百度智能云BCD"><a href="#百度智能云BCD" class="headerlink" title="百度智能云BCD"></a>百度智能云BCD</h3><p>买之前没有做足功课，结果买完才发现百度智能云的域名解析不支持指定端口号。<br>这也导致了我原本想通过Nginx来部署一些二级域名，现在做不到了。<br>有点后悔。</p><h3 id="BCC、CDN"><a href="#BCC、CDN" class="headerlink" title="BCC、CDN"></a>BCC、CDN</h3><p>用下来还算稳定，暂时还没有遇到什么坑。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 部署 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>前端项目中的库引用 CDN</title>
+      <link href="/webpack/1.external-cdn/"/>
+      <url>/webpack/1.external-cdn/</url>
+      
+        <content type="html"><![CDATA[<h3 id="使用CDN引入组件库-减少编译后js文件大小"><a href="#使用CDN引入组件库-减少编译后js文件大小" class="headerlink" title="使用CDN引入组件库 减少编译后js文件大小"></a>使用CDN引入组件库 减少编译后js文件大小</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 Webpack 中配置 externals</span></span><br><span class="line"><span class="comment">// 此处以 vue.config.js 为例</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  configureWebpack: <span class="function"><span class="params">config</span> =&gt;</span> &#123;</span><br><span class="line">    config.externals = &#123;</span><br><span class="line">      <span class="string">'vue'</span>: <span class="string">'Vue'</span>,</span><br><span class="line">      <span class="string">'vue-router'</span>: <span class="string">'VueRouter'</span>,</span><br><span class="line">      <span class="string">'element-ui'</span>: <span class="string">'ELEMENT'</span>,</span><br><span class="line">      <span class="string">'axios'</span>: <span class="string">'axios'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 在 public/index.html 中直接引用cdn资源 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/vue/2.6.11/vue.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/vue-router/3.1.3/vue-router.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/element-ui/lib/index.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/axios/0.19.2/axios.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- built files will be auto injected --&gt;</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Vue </tag>
+            
+            <tag> Webpack </tag>
+            
+            <tag> 工具 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>陪好朋友拍婚照</title>
+      <link href="/rx100m7/1.li-sir-wedding/"/>
+      <url>/rx100m7/1.li-sir-wedding/</url>
+      
+        <content type="html"><![CDATA[<img src="/images/rx100m7/1.jpeg" width="100%" alt="花絮" /><br /><img src="/images/rx100m7/2.jpeg" width="100%" alt="就差个红毯啦" /><br /><img src="/images/rx100m7/3.jpeg" width="100%" alt="超甜" /><br />]]></content>
+      
+      
+      <categories>
+          
+          <category> 摄影 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> RX100M7 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>带 Cookie 去打针</title>
+      <link href="/cookie/2.injection/"/>
+      <url>/cookie/2.injection/</url>
+      
+        <content type="html"><![CDATA[<img src="/images/cookie/5.jpeg" width="100%" alt="打完针有点郁闷" /><br /><img src="/images/cookie/6.jpeg" width="100%" alt="换个姿势郁闷" /><br /><img src="/images/cookie/7.jpeg" width="100%" alt="困兽" /><br />]]></content>
+      
+      
+      <categories>
+          
+          <category> 摄影 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Cookie </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Git 速度提升</title>
+      <link href="/tool/1.git-speed-up/"/>
+      <url>/tool/1.git-speed-up/</url>
+      
+        <content type="html"><![CDATA[<h3 id="0-设置前，git-clone-慢至-25kb-s-无法忍受"><a href="#0-设置前，git-clone-慢至-25kb-s-无法忍受" class="headerlink" title="0. 设置前，git clone 慢至 25kb/s 无法忍受"></a>0. 设置前，git clone 慢至 25kb/s 无法忍受</h3><h3 id="1-搭建ss或其他科学上网通道，并开启本地监听"><a href="#1-搭建ss或其他科学上网通道，并开启本地监听" class="headerlink" title="1. 搭建ss或其他科学上网通道，并开启本地监听"></a>1. 搭建ss或其他科学上网通道，并开启本地监听</h3><img class="article-image" src="/images/github-speed.png" width="300" alt="设置本地端口(此处用的是Trojan)" /><h3 id="2-按对应端口号设置"><a href="#2-按对应端口号设置" class="headerlink" title="2. 按对应端口号设置"></a>2. 按对应端口号设置</h3><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">config</span> --<span class="keyword">global</span> http<span class="variable">.https</span>:<span class="comment">//github.com.proxy socks5://127.0.0.1:1086</span></span><br><span class="line">git <span class="keyword">config</span> --<span class="keyword">global</span> https<span class="variable">.https</span>:<span class="comment">//github.com.proxy socks5://127.0.0.1:1086</span></span><br><span class="line">git <span class="keyword">config</span> --<span class="keyword">global</span> http<span class="variable">.proxy</span> http:<span class="comment">//127.0.0.1:1080</span></span><br><span class="line">git <span class="keyword">config</span> --<span class="keyword">global</span> https<span class="variable">.proxy</span> https:<span class="comment">//127.0.0.1:1080</span></span><br></pre></td></tr></table></figure><h3 id="3-查看config"><a href="#3-查看config" class="headerlink" title="3. 查看config"></a>3. 查看config</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git<span class="built_in"> config </span>--global -e</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 工具 </tag>
+            
+            <tag> Git </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Cookie 初到家</title>
+      <link href="/cookie/1.arrive-home/"/>
+      <url>/cookie/1.arrive-home/</url>
+      
+        <content type="html"><![CDATA[<img src="/images/cookie/1.jpeg" width="100%" alt="吐舌头" /><br /><img src="/images/cookie/2.jpeg" width="100%" alt="举高高" /><br /><img src="/images/cookie/3.jpeg" width="100%" alt="吃手" /><br /><img src="/images/cookie/4.jpeg" width="100%" alt="坐着等开饭" /><br />]]></content>
+      
+      
+      <categories>
+          
+          <category> 摄影 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Cookie </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
