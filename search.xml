@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>VSCode 键盘快捷键插入代码</title>
+      <link href="/fe/IDE/2.vscode-snippets/"/>
+      <url>/fe/IDE/2.vscode-snippets/</url>
+      
+        <content type="html"><![CDATA[<p>不太喜欢敲几个字母再等提示出来，太慢了，就应该按键盘直接插入</p><h4 id="先在-snippets-中新建配置"><a href="#先在-snippets-中新建配置" class="headerlink" title="先在 snippets 中新建配置"></a>先在 snippets 中新建配置</h4><p><code>cmd + shift + p</code> -&gt; <code>Configure User Snippets</code> -&gt; <code>New Global Snippets File</code></p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// console.log.code-snippets</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"console.log"</span>: &#123;</span><br><span class="line"><span class="attr">"scope"</span>: <span class="string">"javascript,typescript,javascriptreact"</span>,</span><br><span class="line"><span class="attr">"prefix"</span>: <span class="string">"log"</span>,</span><br><span class="line"><span class="attr">"body"</span>: [</span><br><span class="line"><span class="string">"console.log('$1', $1);"</span></span><br><span class="line">],</span><br><span class="line"><span class="attr">"description"</span>: <span class="string">"Log output to console"</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="然后在-Keyboard-Shortcuts-中"><a href="#然后在-Keyboard-Shortcuts-中" class="headerlink" title="然后在 Keyboard Shortcuts 中"></a>然后在 Keyboard Shortcuts 中</h4><p><code>Preference</code> -&gt; <code>Keyboard Shortcuts</code> -&gt; <code>JSON file</code></p><p>or <code>cmd + k cmd + s</code></p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"key"</span>: <span class="string">"shift+cmd+l"</span>,</span><br><span class="line">  <span class="attr">"command"</span>: <span class="string">"editor.action.insertSnippet"</span>,</span><br><span class="line">  <span class="attr">"args"</span>: &#123; <span class="attr">"name"</span>: <span class="string">"console.log"</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// setting.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"workbench.colorTheme"</span>: <span class="string">"Dracula"</span>,</span><br><span class="line">    <span class="attr">"window.zoomLevel"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"workbench.iconTheme"</span>: <span class="string">"material-icon-theme"</span>,</span><br><span class="line">    <span class="attr">"editor.tabSize"</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">"emmet.triggerExpansionOnTab"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"emmet.includeLanguages"</span>: &#123;</span><br><span class="line">        <span class="attr">"javascript"</span>: <span class="string">"javascriptreact"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"eslint.validate"</span>: [</span><br><span class="line">        <span class="string">"javascript"</span>,</span><br><span class="line">        <span class="string">"javascriptreact"</span>,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"language"</span>: <span class="string">"html"</span>,</span><br><span class="line">            <span class="attr">"autoFix"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"language"</span>: <span class="string">"vue"</span>,</span><br><span class="line">            <span class="attr">"autoFix"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"editor.codeActionsOnSave"</span>: &#123;</span><br><span class="line">        <span class="attr">"source.fixAll.eslint"</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"terminal.external.osxExec"</span>: <span class="string">"iTerm.app"</span>,</span><br><span class="line">    <span class="attr">"emmet.extensionsPath"</span>: <span class="string">""</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> VSCode </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>RxJS 万物皆可 Stream</title>
       <link href="/fe/JavaScript/7.rxjs/"/>
       <url>/fe/JavaScript/7.rxjs/</url>
@@ -98,33 +123,6 @@
         <tags>
             
             <tag> CSS </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>百姓代理商平台</title>
-      <link href="/fe/JavaScript/6.bx-prm/"/>
-      <url>/fe/JavaScript/6.bx-prm/</url>
-      
-        <content type="html"><![CDATA[<img src="/images/fe/prm.baixing.com.cn.png" style="max-width:300px; margin:auto;" alt="百姓网代理商招商" /><br /><img src="/images/fe/prm-desktop.png" width="100%" alt="百姓网代理商招商 PC" /><br />]]></content>
-      
-      
-      <categories>
-          
-          <category> 开发 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> JavaScript </tag>
-            
-            <tag> 百姓网 </tag>
             
         </tags>
       
@@ -282,8 +280,6 @@
             
             <tag> JavaScript </tag>
             
-            <tag> 浏览器 </tag>
-            
         </tags>
       
     </entry>
@@ -386,8 +382,6 @@
             
             <tag> Vue </tag>
             
-            <tag> uni-app </tag>
-            
         </tags>
       
     </entry>
@@ -436,7 +430,7 @@
       
         <tags>
             
-            <tag> 部署 </tag>
+            <tag> Cloud </tag>
             
         </tags>
       
