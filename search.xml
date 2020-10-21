@@ -4,6 +4,56 @@
   
     
     <entry>
+      <title>弄个小库用来把对象的所有 key 转为 snake_case 或 camelCase</title>
+      <link href="/fe/JavaScript/8.object-key-convertor/"/>
+      <url>/fe/JavaScript/8.object-key-convertor/</url>
+      
+        <content type="html"><![CDATA[<h3 id="JavaScript-中一般习惯使用驼峰的格式写变量名，但难保证各种接口返回的是什么格式，通常看后端语言决定"><a href="#JavaScript-中一般习惯使用驼峰的格式写变量名，但难保证各种接口返回的是什么格式，通常看后端语言决定" class="headerlink" title="JavaScript 中一般习惯使用驼峰的格式写变量名，但难保证各种接口返回的是什么格式，通常看后端语言决定"></a>JavaScript 中一般习惯使用驼峰的格式写变量名，但难保证各种接口返回的是什么格式，通常看后端语言决定</h3><ul><li><a href="https://www.npmjs.com/package/object-keys-convertor" target="_blank" rel="noopener">object-keys-convertor</a></li></ul><h3 id="1-完成功能"><a href="#1-完成功能" class="headerlink" title="1. 完成功能"></a>1. 完成功能</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 详见：repo</span></span><br><span class="line"><span class="keyword">import</span> Convertor <span class="keyword">from</span> <span class="string">'./Convertor'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Mapper</span> </span>&#123;</span><br><span class="line">  private obj: Obj;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(obj: Obj) &#123;</span><br><span class="line">    <span class="keyword">this</span>.obj = obj</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  toCamelcase = (currentVal = <span class="keyword">this</span>.obj): <span class="function"><span class="params">Obj</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  toSnakecase = (currentVal = <span class="keyword">this</span>.obj): <span class="function"><span class="params">Obj</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-测试-先写测试即为TDD"><a href="#2-测试-先写测试即为TDD" class="headerlink" title="2. 测试 先写测试即为TDD"></a>2. 测试 先写测试即为TDD</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; toCamelcase, toSnakecase &#125; <span class="keyword">from</span> <span class="string">'../src'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'Main'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> data = &#123;</span><br><span class="line">    key_of_map: <span class="number">1</span>,</span><br><span class="line">    <span class="string">'key_the-map'</span>: &#123;</span><br><span class="line">      key_ofmap: <span class="number">2</span>,</span><br><span class="line">      key_for_map: &#123;</span><br><span class="line">        <span class="string">' key -_nested'</span>: &#123;</span><br><span class="line">          <span class="string">'key deep'</span>: &#123;</span><br><span class="line">            <span class="string">'key deeper_'</span>: <span class="string">'end'</span>,</span><br><span class="line">            b2b_Category: <span class="string">'b2b'</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  test(<span class="string">'Main.toCamelCase'</span>, () =&gt; &#123;</span><br><span class="line">    expect(toCamelcase(data)).toEqual(&#123;</span><br><span class="line">      keyOfMap: <span class="number">1</span>,</span><br><span class="line">      keyTheMap: &#123;</span><br><span class="line">        keyOfmap: <span class="number">2</span>,</span><br><span class="line">        keyForMap: &#123;</span><br><span class="line">          keyNested: &#123;</span><br><span class="line">            keyDeep: &#123;</span><br><span class="line">              keyDeeper: <span class="string">'end'</span>,</span><br><span class="line">              b2bCategory: <span class="string">'b2b'</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  test(<span class="string">'Main.toSnakecase'</span>, () =&gt; &#123;</span><br><span class="line">    expect(toSnakecase(data)).toEqual(&#123; <span class="comment">/* ... */</span> &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><h3 id="3-编译"><a href="#3-编译" class="headerlink" title="3. 编译"></a>3. 编译</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"build"</span>: <span class="string">"tsc"</span>,</span><br><span class="line">    <span class="attr">"type-check"</span>: <span class="string">"tsc --noEmit"</span>,</span><br><span class="line">    <span class="attr">"type-check:watch"</span>: <span class="string">"npm run type-check -- --watch"</span>,</span><br><span class="line">    <span class="attr">"prepare"</span>: <span class="string">"npm run build"</span>,</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"jest --watchAll"</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="4-发布"><a href="#4-发布" class="headerlink" title="4. 发布"></a>4. 发布</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm login</span><br><span class="line">npm publish</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>算法图解 Grokking Algorithms</title>
+      <link href="/reading/2.grokking-algorithms/"/>
+      <url>/reading/2.grokking-algorithms/</url>
+      
+        <content type="html"><![CDATA[<p>一本非常基础的算法书，补补脑子。</p><h3 id="一、大O表示法"><a href="#一、大O表示法" class="headerlink" title="一、大O表示法"></a>一、大O表示法</h3><ul><li>算法的运行时间以不同的速度增加</li><li>大O表示法指出了最糟情况下的运行时间</li><li>一些常见的大O运行时间<ul><li>O(log n) 对数时间，比如二分查找</li><li>O(n) 线性时间，比如简单查找</li><li>O(n * logn) 快速排序</li><li>O(n^2) 选择排序</li><li>O(n!) 非常慢</li></ul></li><li>大O中省略常数</li></ul><h4 id="Summary-1"><a href="#Summary-1" class="headerlink" title="Summary 1."></a>Summary 1.</h4><ul><li>二分查找的速度比简单查找快得多</li><li>O(log n) 比 O(n) 快</li><li>算法运行时间并不以秒为单位</li><li>算法运行时间是从其增速的角度度量的</li><li>算法运行时间用大O表示法表示</li></ul><h3 id="二、选择排序"><a href="#二、选择排序" class="headerlink" title="二、选择排序"></a>二、选择排序</h3><ul><li>内存：每个抽屉都有地址，存入的东西都记录地址</li><li>数组和链表<ul><li>数组：读取快</li><li>链表：插入、删除快</li></ul></li><li>选择排序 O(n^2) 每次拿出剩余的最大/小项，共进行 n * n 次</li></ul><h4 id="Summary-2"><a href="#Summary-2" class="headerlink" title="Summary 2."></a>Summary 2.</h4><ul><li>计算机内容犹如一大堆抽屉</li><li>需要存储多个元素时，可使用数组或链表</li><li>数组的元素都在一起</li><li>链表的元素时分开的，其中每个元素都存储了下一个元素的地址</li><li>数组的读取速度很快</li><li>链表的插入和删除速度很快</li><li>在同一个数组中，所有元素的类型都必须相同</li></ul><h3 id="三、递归"><a href="#三、递归" class="headerlink" title="三、递归"></a>三、递归</h3><h4 id=""><a href="#" class="headerlink" title=""></a></h4>]]></content>
+      
+      
+      <categories>
+          
+          <category> 闲读 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Read </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>封装一个处理异步 Loading 的 React Custom Hook</title>
       <link href="/fe/React/2.custom-hook/"/>
       <url>/fe/React/2.custom-hook/</url>
