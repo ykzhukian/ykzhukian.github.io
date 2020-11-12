@@ -276,6 +276,9 @@ div {
       display: block; }
       .post .post-content img.article-image {
         margin: auto; }
+      .post .post-content img.small-image {
+        max-width: 400px;
+        margin: auto; }
     .post .post-content ul,
     .post .post-content ol {
       border-radius: 3px;
