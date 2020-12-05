@@ -22,7 +22,16 @@
 </ul>
 </li>
 </ul>
-<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2></div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a></div><div class="post-nav"><a class="next" href="/fe/JavaScript/10.micro-fe/">微前端分享记录</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><ul>
+<li>每次建立连接时，客户端告诉服务端这个Websocket实例是为谁而建（当前登录的ID），服务端将实例推入一个列表放入内存中。</li>
+<li>在有新消息时，服务端（<a href="https://websockets.readthedocs.io/en/stable/intro.html" target="_blank" rel="noopener">python websockets</a>）向客户端推送消息。</li>
+<li>客户端获取新消息对象，包括类型和内容，加入本地的状态中（Redux中原有的消息列表），如果点击查看则发送已读消息像服务端，然后服务端广播已读结果，将同一个用户各个标签页的消息列表都进行更新。</li>
+</ul>
+<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><h3 id="同步的消息弹窗"><a href="#同步的消息弹窗" class="headerlink" title="同步的消息弹窗"></a>同步的消息弹窗</h3><img class="article-image" src="/images/fe/ws-notification.gif" width="500" alt="四个标签页同时更新" />
+
+<h3 id="同步的线索消息"><a href="#同步的线索消息" class="headerlink" title="同步的线索消息"></a>同步的线索消息</h3><img class="article-image" src="/images/fe/pop-mickey.gif" width="500" alt="四个标签页同时更新" />
+
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a></div><div class="post-nav"><a class="next" href="/fe/JavaScript/10.micro-fe/">微前端分享记录</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
     this.page.url = 'https://ykzhukian.github.io/fe/JavaScript/11.ws-notification/';
     this.page.identifier = 'fe/JavaScript/11.ws-notification/';
     this.page.title = 'Websocket 实现实时消息推送弹窗';
