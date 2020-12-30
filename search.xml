@@ -13,7 +13,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -38,7 +38,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -63,14 +63,14 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 工具 </tag>
+            <tag> Tools </tag>
             
         </tags>
       
@@ -88,7 +88,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -115,7 +115,7 @@
       
       <categories>
           
-          <category> 闲读 </category>
+          <category> Reading Notes </category>
           
       </categories>
       
@@ -140,7 +140,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -165,7 +165,7 @@
       
       <categories>
           
-          <category> 闲读 </category>
+          <category> Reading Notes </category>
           
       </categories>
       
@@ -190,7 +190,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -215,7 +215,7 @@
       
       <categories>
           
-          <category> 闲读 </category>
+          <category> Reading Notes </category>
           
       </categories>
       
@@ -240,7 +240,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -265,7 +265,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -290,7 +290,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -317,7 +317,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -342,7 +342,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -367,7 +367,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -394,7 +394,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -403,9 +403,9 @@
             
             <tag> Webpack </tag>
             
-            <tag> 工具 </tag>
-            
             <tag> Nginx </tag>
+            
+            <tag> Tools </tag>
             
         </tags>
       
@@ -423,7 +423,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -448,7 +448,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -473,7 +473,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -498,7 +498,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -523,7 +523,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -548,7 +548,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -573,7 +573,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -600,7 +600,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -625,7 +625,7 @@
       
       <categories>
           
-          <category> 摄影 </category>
+          <category> Photograph </category>
           
       </categories>
       
@@ -650,7 +650,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -675,7 +675,7 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
@@ -686,7 +686,7 @@
             
             <tag> Webpack </tag>
             
-            <tag> 工具 </tag>
+            <tag> Tools </tag>
             
         </tags>
       
@@ -704,7 +704,7 @@
       
       <categories>
           
-          <category> 摄影 </category>
+          <category> Photograph </category>
           
       </categories>
       
@@ -723,7 +723,7 @@
       
       <categories>
           
-          <category> 摄影 </category>
+          <category> Photograph </category>
           
       </categories>
       
@@ -748,16 +748,16 @@
       
       <categories>
           
-          <category> 开发 </category>
+          <category> Development </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 工具 </tag>
-            
             <tag> Git </tag>
+            
+            <tag> Tools </tag>
             
         </tags>
       
@@ -775,7 +775,7 @@
       
       <categories>
           
-          <category> 摄影 </category>
+          <category> Photograph </category>
           
       </categories>
       
@@ -783,6 +783,33 @@
         <tags>
             
             <tag> Cookie </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>CRM 系统【前端】权限控制管理</title>
+      <link href="/case-study/crm-ui-permission/"/>
+      <url>/case-study/crm-ui-permission/</url>
+      
+        <content type="html"><![CDATA[<h1 id="一、现状分析"><a href="#一、现状分析" class="headerlink" title="一、现状分析"></a>一、现状分析</h1>]]></content>
+      
+      
+      <categories>
+          
+          <category> Case Study </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+            <tag> React </tag>
             
         </tags>
       
