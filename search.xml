@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>DevOps UI Design</title>
+      <link href="/fe/CSS/4.devops-ui/"/>
+      <url>/fe/CSS/4.devops-ui/</url>
+      
+        <content type="html"><![CDATA[<h2 id="有些人表面是开发，背地里是UI设计"><a href="#有些人表面是开发，背地里是UI设计" class="headerlink" title="有些人表面是开发，背地里是UI设计"></a>有些人表面是开发，背地里是UI设计</h2><img src="/images/fe/devops.png" width="100%" alt="仿佛是给自己挖了个大坑" />]]></content>
+      
+      
+      <categories>
+          
+          <category> Development </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Design </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Websocket 实现实时消息推送弹窗</title>
       <link href="/fe/JavaScript/11.ws-notification/"/>
       <url>/fe/JavaScript/11.ws-notification/</url>
