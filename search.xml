@@ -4,6 +4,58 @@
   
     
     <entry>
+      <title>2021前端行业发展趋势</title>
+      <link href="/case-study/2021-trend/"/>
+      <url>/case-study/2021-trend/</url>
+      
+        <content type="html"><![CDATA[<h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><ol><li>React 17<ol><li>干掉 unsafe</li><li>往维护期发展、前端工程化</li><li>server component</li></ol></li><li>Vue 3.0<ol><li>composition api</li><li>响应式实现方式</li><li>编译方向（ref语法糖）</li></ol></li><li>都没有在前端基于浏览器视图方案上有什么进步，除了Angular<ol><li>不再关注框架本身</li></ol></li><li>2021更趋向于工程化<ol><li>server components</li><li>异步渲染</li><li>vite</li><li>其他部署问题</li></ol></li></ol><h2 id="Typescript"><a href="#Typescript" class="headerlink" title="Typescript"></a>Typescript</h2><ol><li>更火</li><li>缺点<ol><li>JS的超集，最终还是编译成JS，像是JS的补丁，但又阉割了一些原型链上的api</li><li>object的天然的随意属性变动无法使用</li><li>只在编译期进行类型检测，没办法控制后端api的类型</li></ol></li></ol><h2 id="Flutter"><a href="#Flutter" class="headerlink" title="Flutter"></a>Flutter</h2><ol><li>不看好（只是一个产品）</li><li>RN为什么不学Flutter构建UI系统<ol><li>RN更关注JS执行环境，而不是UI层面</li></ol></li></ol><h2 id="PWA、WebComponent"><a href="#PWA、WebComponent" class="headerlink" title="PWA、WebComponent"></a>PWA、WebComponent</h2><ol><li>Google </li></ol><h2 id="GraphQL"><a href="#GraphQL" class="headerlink" title="GraphQL"></a>GraphQL</h2><ol><li>概念好但需要后端资源，但得到的利益都在前端，后端还会有性能消耗</li><li>成本高</li><li>不太会成为主流</li></ol><h2 id="小程序"><a href="#小程序" class="headerlink" title="小程序"></a>小程序</h2><ol><li>一家独大</li><li>微信小程序有外部公司开发多、自家的小程序只自家开发</li><li>会越来越火</li></ol><h2 id="行业趋势"><a href="#行业趋势" class="headerlink" title="行业趋势"></a>行业趋势</h2><ol><li>由于疫情大环境影响，不会有爆发增长的</li><li>小游戏（h5或app小程序）；幼稚，流量，增长访问</li><li>音视频直播；没有无门槛直播，成本高，要租用直播平台宽带，资源；成本会下降</li><li>服务端渲染【重点】<ol><li>游戏、网页；提升用户加载体验</li><li>React server component</li><li>音视频数据直接从源到用户端，不经过服务器，节省服务器资源成本</li></ol></li><li>大数据<ol><li>数据可视化；不仅是charts，突破二维（二维剔除了一些不必要的数据来得出结果，没有过程数据）</li><li>B端发展，更细化，更垂直（垂直领域）</li><li>用户/客户；用户：切换平台；客户：产品不兼容；所以集成度会越来越高</li><li>Canvas、WebGL 数据可视化</li></ol></li><li>Serverless【重点】<ol><li>组件既服务；组件可以直接连数据库</li><li>基础云服务由服务商提供，我们更要关注如何部署</li></ol></li><li>低代码 Low-code<ol><li>问题<ol><li>外部对接</li><li>需要学多个平台</li></ol></li><li>视觉抽象化转化为代码</li></ol></li><li>机器学习<ol><li>问卷调查怎么判断是否乱填<ol><li>通过填写时候的行为使用模型判断，不通过后端，直接用浏览器的资源实时判断</li></ol></li><li>…</li></ol></li><li>WebRTC (Web Real-Time Communication)<ol><li>5G</li></ol></li><li>WebAssembly<ol><li>计算的东西放到web上，底层数据处理比如视频的编辑</li><li>Rust</li></ol></li><li>DSL 描述系统语言(领域特定语言)</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Case Study </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>UI permissions management for CRM system</title>
+      <link href="/case-study/crm-ui-permission/"/>
+      <url>/case-study/crm-ui-permission/</url>
+      
+        <content type="html"><![CDATA[<h1 id="1-Why-headache"><a href="#1-Why-headache" class="headerlink" title="1. Why headache?"></a>1. Why headache?</h1><h3 id="1-1-No-uniform-specification"><a href="#1-1-No-uniform-specification" class="headerlink" title="1.1 No uniform specification"></a>1.1 No uniform specification</h3><h4 id="There-are-different-solutions-for-ui-permission-by-developers"><a href="#There-are-different-solutions-for-ui-permission-by-developers" class="headerlink" title="There are different solutions for ui permission by developers."></a>There are different solutions for ui permission by developers.</h4><h5 id="Permission-list"><a href="#Permission-list" class="headerlink" title="Permission list"></a>Permission list</h5><p>There is an API request called <code>/visible_permissions</code> returns a list of permission keys the current user could <code>reach/see</code>.</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> permissions = [<span class="string">'page_a'</span>, <span class="string">'page_b_section_a'</span>, <span class="string">'page_c_button_x'</span>, ...]; <span class="comment">// permissions for current user</span></span><br></pre></td></tr></table></figure><p>When it requires a permission check at anywhere in the project, it can be solved by <code>if (permissions.includes(&#39;page_a&#39;)) render Page A</code>.</p><h5 id="Role-ids"><a href="#Role-ids" class="headerlink" title="Role ids"></a>Role ids</h5><p>There is also a list of role ids, and each <code>user</code> can own couple of <code>roles</code>.</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> role_ids = [<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>, ...]; <span class="comment">// roles for current user</span></span><br></pre></td></tr></table></figure><p>Similar to the previous one, <code>if (role_ids.includes(&#39;1&#39;)) render Page B</code>.</p><h4 id="The-problem"><a href="#The-problem" class="headerlink" title="The problem"></a>The problem</h4><p>When a developer takes over this project, he/she has to learn all those different ways to manage the permissions. </p><h3 id="1-2-Too-many-hard-coded-logic"><a href="#1-2-Too-many-hard-coded-logic" class="headerlink" title="1.2 Too many hard coded logic"></a>1.2 Too many hard coded logic</h3><h5 id="hundreds-of-roles-includes-and-permissions-includes"><a href="#hundreds-of-roles-includes-and-permissions-includes" class="headerlink" title="hundreds of roles.includes() and permissions.includes()"></a>hundreds of roles.includes() and permissions.includes()</h5><h4 id="The-problem-1"><a href="#The-problem-1" class="headerlink" title="The problem"></a>The problem</h4><p>When the amount of these situations comes to be large, those if-statement codes are going to be everywhere in the project, which could make it very difficult to target one of the behaviour for a specific permission case.</p><p>To withdraw a permission for a specific role, we need to search by the code globally and do some coding to achieve that. It could become more complex when there happens to be some conditional ui rendering with many lines of logic.</p><p>If someone needs to make sure a current behaviour of the the roles, he/she has to ask for a developer to search in the codes for the answer.</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Case Study </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+            <tag> React </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>DevOps UI Design</title>
       <link href="/fe/CSS/4.devops-ui/"/>
       <url>/fe/CSS/4.devops-ui/</url>
@@ -518,7 +570,7 @@
       <link href="/fe/JavaScript/2.browser-event-loop/"/>
       <url>/fe/JavaScript/2.browser-event-loop/</url>
       
-        <content type="html"><![CDATA[<h4 id="浏览器的内核：-Render-进程"><a href="#浏览器的内核：-Render-进程" class="headerlink" title="浏览器的内核： Render 进程"></a>浏览器的内核： Render 进程</h4><ul><li>GUI渲染线程</li><li>JavaScript 引擎线程 （Chrome v8）</li><li>事件触发线程</li><li>定时器线程</li><li>异步 HTTP 请求线程</li></ul><h4 id="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"><a href="#JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。" class="headerlink" title="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"></a>JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。</h4><h4 id="1-异步线程"><a href="#1-异步线程" class="headerlink" title="1. 异步线程"></a>1. 异步线程</h4><ul><li>网络请求<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(url).then(<span class="function"><span class="params">res</span> =&gt;</span> res.json()).then(<span class="built_in">console</span>.log);</span><br></pre></td></tr></table></figure></li></ul><ul><li>定时器<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(fn, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></li></ul><ul><li>事件触发<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>);</span><br><span class="line">btn.addEventListener(<span class="string">'click'</span>, () =&gt; <span class="built_in">console</span>.log(<span class="string">'clicked btn'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> timeoutId = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    clearTimeout(timeoutId);</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>在执行 <code>console.log(&#39;hello&#39;)</code> 的时候，点击按钮，不会立刻执行绑定的事件，JS引擎处于阻塞状态。</li></ul><h4 id="2-任务队列-Task-Queue"><a href="#2-任务队列-Task-Queue" class="headerlink" title="2. 任务队列 Task Queue"></a>2. 任务队列 Task Queue</h4><img class="article-image" src="/images/fe/browser-event-loop.png" width="500" alt="Browser Event Loop" /><ul><li>JS引擎从上到下将程序入栈出栈的过程中，遇到那些有异步能力的 WebApi，会选择把他们放入他们自己的线程中，短暂的忽略他们。继续执行那些同步代码。</li><li>在各自的线程里完成处理之后，会将这些异步结果以回调的形式放入 Task Queue 中。</li><li>等待JS引擎空闲，再次回到JS引擎中。</li></ul><h4 id="3-Event-Loop-（浏览器）"><a href="#3-Event-Loop-（浏览器）" class="headerlink" title="3. Event Loop （浏览器）"></a>3. Event Loop （浏览器）</h4><ul><li>任务队列和JS主引擎之间的桥梁。</li><li>它被设计出来的目的也就是为了保证JS引擎线程的安全和稳定的。</li><li>其实是在把异步转化为同步。</li><li>An event loop has one or more task queues. A task queue is a set of tasks.</li></ul><h4 id="4-1-宏任务队列-Macrotask-Queue"><a href="#4-1-宏任务队列-Macrotask-Queue" class="headerlink" title="4.1 宏任务队列 Macrotask Queue"></a>4.1 宏任务队列 Macrotask Queue</h4><ul><li>setTimeout</li><li>setInterval</li></ul><h4 id="4-2-微任务队列-Microtask-Queue"><a href="#4-2-微任务队列-Microtask-Queue" class="headerlink" title="4.2 微任务队列 Microtask Queue"></a>4.2 微任务队列 Microtask Queue</h4><ul><li>Promise</li><li>process.nextTick</li><li>MutationObserver</li></ul><p>MicroTask 会在一次 EventLoop 中全部执行完。</p><ul><li>同步（主线程执行栈清空）-&gt; 微任务（全部） -&gt; 宏任务（第一个） -&gt; 微（全部）-&gt; 宏（一个）-&gt; …</li></ul><h4 id="5-其他关于浏览器加载资源阻塞"><a href="#5-其他关于浏览器加载资源阻塞" class="headerlink" title="5. 其他关于浏览器加载资源阻塞"></a>5. 其他关于浏览器加载资源阻塞</h4><ul><li>script<img class="article-image" src="/images/fe/script-async-defer.jpeg" width="500" alt="<script> async defer" /></li></ul><ul><li>css 加载不会阻塞 DOM 树的解析</li><li>css 加载会阻塞 DOM 树的渲染</li><li>css 加载会阻塞后面 js 语句的执行</li></ul>]]></content>
+        <content type="html"><![CDATA[<h4 id="浏览器的内核：-Render-进程"><a href="#浏览器的内核：-Render-进程" class="headerlink" title="浏览器的内核： Render 进程"></a>浏览器的内核： Render 进程</h4><ul><li>GUI渲染线程</li><li>JavaScript 引擎线程 （Chrome v8）</li><li>事件触发线程</li><li>定时器线程</li><li>异步 HTTP 请求线程</li></ul><h4 id="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"><a href="#JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。" class="headerlink" title="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"></a>JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。</h4><h4 id="1-异步线程"><a href="#1-异步线程" class="headerlink" title="1. 异步线程"></a>1. 异步线程</h4><ul><li>网络请求<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(url).then(<span class="function"><span class="params">res</span> =&gt;</span> res.json()).then(<span class="built_in">console</span>.log);</span><br></pre></td></tr></table></figure></li></ul><ul><li>定时器<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(fn, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></li></ul><ul><li>事件触发<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>);</span><br><span class="line">btn.addEventListener(<span class="string">'click'</span>, () =&gt; <span class="built_in">console</span>.log(<span class="string">'clicked btn'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> timeoutId = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    clearTimeout(timeoutId);</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>在执行 <code>console.log(&#39;hello&#39;)</code> 的时候，点击按钮，不会立刻执行绑定的事件，JS引擎处于阻塞状态。</li></ul><h4 id="2-任务队列-Task-Queue"><a href="#2-任务队列-Task-Queue" class="headerlink" title="2. 任务队列 Task Queue"></a>2. 任务队列 Task Queue</h4><img class="article-image" src="/images/fe/browser-event-loop.png" width="500" alt="Browser Event Loop" /><ul><li>JS引擎从上到下将程序入栈出栈的过程中，遇到那些有异步能力的 WebApi，会选择把他们放入他们自己的线程中，短暂的忽略他们。继续执行那些同步代码。</li><li>在各自的线程里完成处理之后，会将这些异步结果以回调的形式放入 Task Queue 中。</li><li>等待JS引擎空闲，再次回到JS引擎中。</li></ul><h4 id="3-Event-Loop-（浏览器）"><a href="#3-Event-Loop-（浏览器）" class="headerlink" title="3. Event Loop （浏览器）"></a>3. Event Loop （浏览器）</h4><ul><li>任务队列和JS主引擎之间的桥梁。</li><li>它被设计出来的目的也就是为了保证JS引擎线程的安全和稳定的。</li><li>其实是在把异步转化为同步。</li><li>An event loop has one or more task queues. A task queue is a set of tasks.</li></ul><h4 id="4-1-宏任务队列-Macrotask-Queue"><a href="#4-1-宏任务队列-Macrotask-Queue" class="headerlink" title="4.1 宏任务队列 Macrotask Queue"></a>4.1 宏任务队列 Macrotask Queue</h4><ul><li>setTimeout</li><li>setInterval</li></ul><h4 id="4-2-微任务队列-Microtask-Queue"><a href="#4-2-微任务队列-Microtask-Queue" class="headerlink" title="4.2 微任务队列 Microtask Queue"></a>4.2 微任务队列 Microtask Queue</h4><ul><li>Promise</li><li>process.nextTick</li><li>MutationObserver</li></ul><p>MicroTask 会在一次 EventLoop 中全部执行完。</p><ul><li>同步（主线程执行栈清空）-&gt; 微任务（全部） -&gt; 宏任务（第一个） -&gt; 微（全部）-&gt; 宏（一个）-&gt; …</li></ul><h4 id="5-其他关于浏览器加载资源阻塞"><a href="#5-其他关于浏览器加载资源阻塞" class="headerlink" title="5. 其他关于浏览器加载资源阻塞"></a>5. 其他关于浏览器加载资源阻塞</h4><ul><li><p>script</p><img class="article-image" src="/images/fe/script-async-defer.jpeg" width="500" alt="<script> async defer" /></li><li><p>css 加载不会阻塞 DOM 树的解析</p></li><li><p>css 加载会阻塞 DOM 树的渲染</p></li><li><p>css 加载会阻塞后面 js 语句的执行</p></li></ul>]]></content>
       
       
       <categories>
@@ -808,33 +860,6 @@
         <tags>
             
             <tag> Cookie </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>CRM 系统【前端】权限控制管理</title>
-      <link href="/case-study/crm-ui-permission/"/>
-      <url>/case-study/crm-ui-permission/</url>
-      
-        <content type="html"><![CDATA[<h1 id="一、现状分析"><a href="#一、现状分析" class="headerlink" title="一、现状分析"></a>一、现状分析</h1>]]></content>
-      
-      
-      <categories>
-          
-          <category> Case Study </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> JavaScript </tag>
-            
-            <tag> React </tag>
             
         </tags>
       
