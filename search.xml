@@ -133,11 +133,11 @@
     
     
     <entry>
-      <title>DevOps UI Design</title>
+      <title>DevOps UI 设计</title>
       <link href="/fe/CSS/4.devops-ui/"/>
       <url>/fe/CSS/4.devops-ui/</url>
       
-        <content type="html"><![CDATA[<h2 id="有些人表面是开发，背地里是UI设计"><a href="#有些人表面是开发，背地里是UI设计" class="headerlink" title="有些人表面是开发，背地里是UI设计"></a>有些人表面是开发，背地里是UI设计</h2><img src="/images/fe/devops.png" width="100%" alt="仿佛是给自己挖了个大坑" /><h2 id="实际开发"><a href="#实际开发" class="headerlink" title="实际开发"></a>实际开发</h2><img src="/images/fe/devops-done-1.jpg" width="100%" alt="面目全非" /><img src="/images/fe/devops-done-2.jpg" width="100%" alt="感觉比设计的好看点" />]]></content>
+        <content type="html"><![CDATA[<h2 id="有些人表面是开发，背地里是UI设计"><a href="#有些人表面是开发，背地里是UI设计" class="headerlink" title="有些人表面是开发，背地里是UI设计"></a>有些人表面是开发，背地里是UI设计</h2><img src="/images/fe/devops.png" width="100%" alt="仿佛是给自己挖了个大坑" /><h2 id="实际开发"><a href="#实际开发" class="headerlink" title="实际开发"></a>实际开发</h2><img src="/images/fe/devops-done-1.jpg" width="100%" alt="感觉比设计的好看点" /><h2 id="实际上线"><a href="#实际上线" class="headerlink" title="实际上线"></a>实际上线</h2><img src="/images/fe/devops-done-2.png" width="100%" alt="顺眼多了，果然迭代很重要" /><img src="/images/fe/devops-done-3.png" width="100%" alt="完整" />]]></content>
       
       
       <categories>
