@@ -20,9 +20,9 @@
       
         <tags>
             
-            <tag> Tools </tag>
+            <tag> DevOps </tag>
             
-            <tag> Docker </tag>
+            <tag> Tools </tag>
             
         </tags>
       
@@ -401,7 +401,7 @@
       
         <tags>
             
-            <tag> VSCode </tag>
+            <tag> Tools </tag>
             
         </tags>
       
@@ -530,7 +530,7 @@
             
             <tag> JavaScript </tag>
             
-            <tag> HTTP </tag>
+            <tag> Tools </tag>
             
         </tags>
       
@@ -557,7 +557,7 @@
             
             <tag> Webpack </tag>
             
-            <tag> Nginx </tag>
+            <tag> DevOps </tag>
             
             <tag> Tools </tag>
             
@@ -736,7 +736,7 @@
             
             <tag> React </tag>
             
-            <tag> VSCode </tag>
+            <tag> Tools </tag>
             
         </tags>
       
@@ -784,12 +784,6 @@
       </categories>
       
       
-        <tags>
-            
-            <tag> Cookie </tag>
-            
-        </tags>
-      
     </entry>
     
     
@@ -811,7 +805,7 @@
       
         <tags>
             
-            <tag> Cloud </tag>
+            <tag> Tools </tag>
             
         </tags>
       
@@ -882,12 +876,6 @@
       </categories>
       
       
-        <tags>
-            
-            <tag> Cookie </tag>
-            
-        </tags>
-      
     </entry>
     
     
@@ -933,12 +921,6 @@
           
       </categories>
       
-      
-        <tags>
-            
-            <tag> Cookie </tag>
-            
-        </tags>
       
     </entry>
     
