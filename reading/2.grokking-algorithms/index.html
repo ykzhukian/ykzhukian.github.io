@@ -114,6 +114,58 @@
 <li>非加权图(unweighted graphQ34567809  -=<br>在无向图中，每条边都是一个环。狄克斯特拉算法只适用于有向无环图(directed acyclic graph，DAG)。</li>
 </ul>
 <h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>要编写解决这个问题的代码，需要三个散列表。</p>
+<h4 id="Summary-7"><a href="#Summary-7" class="headerlink" title="Summary 7."></a>Summary 7.</h4><ul>
+<li>广度优先搜索用于在非加权图中查找最短路径。</li>
+<li>狄克斯特拉算法用于在加权图中查找最短路径。</li>
+<li>仅当权重为正时狄克斯特拉算法才管用。</li>
+<li>如果图中包含负权边，请使用贝尔曼福德算法。</li>
+</ul>
+<h3 id="八、贪婪算法"><a href="#八、贪婪算法" class="headerlink" title="八、贪婪算法"></a>八、贪婪算法</h3><ul>
+<li>每步都选择局部最优解，最终得到的就是全局最优解。</li>
+</ul>
+<p>教室分配课程：<br>(1) 选出结束最早的课，它就是要在这间教室上的第一堂课。<br>(2) 接下来，必须选择第一堂课结束后才开始的课。同样，你选择结束最早的课，这将是要<br>在这间教室上的第二堂课。</p>
+<h4 id="NP完全问题"><a href="#NP完全问题" class="headerlink" title="NP完全问题"></a>NP完全问题</h4><ul>
+<li>元素较少时算法的运行速度非常快，但随着元素数量的增加，速度会变得非常慢。</li>
+<li>涉及“所有组合”的问题通常是NP完全问题。</li>
+<li>不能将问题分成小问题，必须考虑各种可能的情况。这可能是NP完全问题。</li>
+<li>如果问题涉及序列（如旅行商问题中的城市序列）且难以解决，它可能就是NP完全问题。</li>
+<li>如果问题涉及集合（如广播台集合）且难以解决，它可能就是NP完全问题。</li>
+<li>如果问题可转换为集合覆盖问题或旅行商问题，那它肯定是NP完全问题。</li>
+</ul>
+<h4 id="Summary-8"><a href="#Summary-8" class="headerlink" title="Summary 8."></a>Summary 8.</h4><ul>
+<li>贪婪算法寻找局部最优解，企图以这种方式获得全局最优解。</li>
+<li>对于NP完全问题，还没有找到快速解决方案。</li>
+<li>面临NP完全问题时，最佳的做法是使用近似算法。</li>
+<li>贪婪算法易于实现、运行速度快，是不错的近似算法。</li>
+</ul>
+<h3 id="九、动态规划"><a href="#九、动态规划" class="headerlink" title="九、动态规划"></a>九、动态规划</h3><ul>
+<li>动态规划从小问题着手，逐步解决大问题</li>
+</ul>
+<h4 id="Summary-9"><a href="#Summary-9" class="headerlink" title="Summary 9."></a>Summary 9.</h4><p>需要在给定约束条件下优化某种指标时，动态规划很有用。</p>
+<ul>
+<li>问题可分解为离散子问题时，可使用动态规划来解决。</li>
+<li>每种动态规划解决方案都涉及网格。</li>
+<li>单元格中的值通常就是你要优化的值。</li>
+<li>每个单元格都是一个子问题，因此你需要考虑如何将问题分解为子问题。</li>
+<li>没有放之四海皆准的计算动态规划解决方案的公式。</li>
+</ul>
+<h3 id="十、K最近邻算法"><a href="#十、K最近邻算法" class="headerlink" title="十、K最近邻算法"></a>十、K最近邻算法</h3><ul>
+<li>K：和目标最近的K个近邻</li>
+</ul>
+<h4 id="特征抽取"><a href="#特征抽取" class="headerlink" title="特征抽取"></a>特征抽取</h4><ol>
+<li>抽取它们的特征，再根据特征绘图</li>
+<li>计算两坐标距离</li>
+</ol>
+<h4 id="OCR指的是光学字符识别，使用KNN算法"><a href="#OCR指的是光学字符识别，使用KNN算法" class="headerlink" title="OCR指的是光学字符识别，使用KNN算法"></a>OCR指的是光学字符识别，使用KNN算法</h4><ul>
+<li>OCR的第一步是查看大量的数字图像并提取特征，这被称为训练（training）。大多数机器学<br>习算法都包含训练的步骤：要让计算机完成任务，必须先训练它。下一个示例是垃圾邮件过滤器，<br>其中也包含训练的步骤。</li>
+</ul>
+<h4 id="Summary-10"><a href="#Summary-10" class="headerlink" title="Summary 10."></a>Summary 10.</h4><p>KNN用于分类和回归，需要考虑最近的邻居。</p>
+<ul>
+<li>分类就是编组。</li>
+<li>回归就是预测结果（如数字）。</li>
+<li>特征抽取意味着将物品（如水果或用户）转换为一系列可比较的数字。</li>
+<li>能否挑选合适的特征事关KNN算法的成败。</li>
+</ul>
 </div><div class="tags"><a href="/tags/Read/"><i class="fa fa-tag"></i>Read</a></div><div class="post-nav"><a class="pre" href="/fe/JavaScript/8.object-key-convertor/">弄个小库用来把对象的所有 key 转为 snake_case 或 camelCase</a><a class="next" href="/fe/React/2.custom-hook/">封装一个处理异步 Loading 的 React Custom Hook</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
     this.page.url = 'https://ykzhukian.github.io/reading/2.grokking-algorithms/';
     this.page.identifier = 'reading/2.grokking-algorithms/';
