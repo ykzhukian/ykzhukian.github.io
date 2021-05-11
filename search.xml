@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>分享一个挺有意思的讨论</title>
+      <link href="/reading/5.doge/"/>
+      <url>/reading/5.doge/</url>
+      
+        <content type="html"><![CDATA[<div class="video-container"><iframe src="https://www.youtube.com/embed/Js2uA9BBHxo" frameborder="0" loading="lazy" allowfullscreen></iframe></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> Reading Notes </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>前端工程化初探 CI 流程</title>
       <link href="/tool/5.fe-ci/"/>
       <url>/tool/5.fe-ci/</url>
