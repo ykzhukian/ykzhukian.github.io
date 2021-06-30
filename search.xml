@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Vite 踩坑</title>
+      <link href="/fe/JavaScript/13.first-time-vite/"/>
+      <url>/fe/JavaScript/13.first-time-vite/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Vite"><a href="#Vite" class="headerlink" title="Vite"></a><a href="https://vitejs.dev" target="_blank" rel="noopener">Vite</a></h2><p>Vite 2.0 带着 <a href="https://github.com/evanw/esbuild" target="_blank" rel="noopener">esbuild</a>，以及对 React 项目的支持来了，我被这个打包耗时对比图打动，于是决定尝试一下。</p><p>用之前了解了一下 Vite 的受限：</p><ol><li>只支持 ESM，其他例如 CJS 等可以用<a href="https://github.com/vitejs/vite/tree/main/packages/plugin-legacy" target="_blank" rel="noopener">插件兼容</a> (<a href="https://irian.to/blogs/what-are-cjs-amd-umd-and-esm-in-javascript/" target="_blank" rel="noopener">ESM?</a>)</li><li>对浏览器原生倒模块能力的依赖<ul><li>Chrome &gt;=61</li><li>Firefox &gt;=60</li><li>Safari &gt;=11</li><li>Edge &gt;=16</li></ul></li><li>生态一般</li></ol><p>感觉对将要新启的项目没什么影响。</p><h2 id="1-esbuild-不支持-React-17-新的-jsx-transform"><a href="#1-esbuild-不支持-React-17-新的-jsx-transform" class="headerlink" title="1. esbuild 不支持 React 17 新的 jsx transform"></a>1. esbuild 不支持 React 17 新的 jsx transform</h2><p>React 17 提供了一个<a href="https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html" target="_blank" rel="noopener">新的 JSX 转义方式</a>，是<a href="https://babeljs.io/blog/2020/03/16/7.9.0#a-new-jsx-transform-11154httpsgithubcombabelbabelpull11154" target="_blank" rel="noopener">和 Babel 合作</a>搞的。</p><p>简单来讲就是不需要在每个 <code>.jsx</code> 中引入 React，不用 <code>import React from &#39;react&#39;;</code>。<br>在编译的时候，babel 会自动引入：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; jsx <span class="keyword">as</span> _jsx &#125; <span class="keyword">from</span> <span class="string">'react/jsx-runtime'</span>;</span><br></pre></td></tr></table></figure><p>然而，Vite 没有。如果想在项目里使用同样的能力，就需要在 <code>vite.config.ts</code> 中配置：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">esbuild: &#123;</span><br><span class="line">  jsxInject: <span class="string">`import React from 'react'`</span> <span class="comment">// esbuild 暂时不支持 React 17 新的 jsx transform，暂时这样</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure><p>假装也可以做到。。。</p><h2 id="2-路径别名一定要斜线开头"><a href="#2-路径别名一定要斜线开头" class="headerlink" title="2. 路径别名一定要斜线开头"></a>2. 路径别名一定要斜线开头</h2><p>绝对路径会看起来对项目结构和代码理解更清晰一些，但 Vite 不能支持 <code>@</code> 开头，只能 <code>/</code> 开头来引入。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="string">'/@/'</span>: path.resolve(__dirname, <span class="string">'src'</span>); <span class="comment">// 别名必须以斜线开头和结尾</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 或者：</span></span><br><span class="line">    alias: [</span><br><span class="line">      &#123; <span class="attr">find</span>: <span class="regexp">/^~/</span>, <span class="attr">replacement</span>: <span class="string">''</span> &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>原因是，<br>Vite 的 Dev Server 用的是浏览器自己对于 ESM 的引入方式。当用到一下方式引入依赖的时候：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Suspense, lazy &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br></pre></td></tr></table></figure><p>浏览器并不知道 <code>react</code> 库在 <code>node_modules</code> 里，它只能用相对和绝对路径去找。此处 Vite 1.0 是在本地起了一个 koa 服务，代理这些模块。Vite 2.0 也是<a href="https://github.com/vitejs/vite/blob/main/packages/vite/src/node/server/index.ts" target="_blank" rel="noopener">一个 node 服务</a>，当浏览器读取到 html 文件并执行到 import xxx 时，才向该服务去请求这个模块，这就保证了只有在真正使用到这个模块的时候，浏览器才会请求并解析这个模块，将按需加载做到极致。</p><p>这个服务起来之前，Vite 会用 esbuild 去<a href="https://cn.vitejs.dev/guide/dep-pre-bundling.html" target="_blank" rel="noopener">预构建依赖</a>，来加速浏览器请求相应模块的速度。</p><p>Vite 对所有 import 都做了处理，用带有 @modules 的前缀重写它们。</p><h2 id="3-本地开发和打包出来的是两个东西"><a href="#3-本地开发和打包出来的是两个东西" class="headerlink" title="3. 本地开发和打包出来的是两个东西"></a>3. 本地开发和打包出来的是两个东西</h2><blockquote><p>虽然 esbuild 快得惊人，并且已经是一个在构建库方面比较出色的工具，但一些针对构建 应用 的重要功能仍然还在持续开发中。</p></blockquote><p>所以，本地开发的时候得益于 esbuild 相当快的热更新、项目启动速度，但是生产环境还是用的 Rollup。难免会有一些不一样的表现。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整体体验还是很好的，React 项目可以非常快速地启动以及 HMR，尤其是二次启动。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Development </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+            <tag> React </tag>
+            
+            <tag> Tools </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>可以落地的企业内流水线</title>
       <link href="/case-study/dev-ops/"/>
       <url>/case-study/dev-ops/</url>
@@ -44,6 +73,31 @@
           
       </categories>
       
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>前端 Mock 数据的一些可选方案</title>
+      <link href="/fe/JavaScript/12.mock-solutions/"/>
+      <url>/fe/JavaScript/12.mock-solutions/</url>
+      
+        <content type="html"><![CDATA[<h3 id="1-Mock-数据写在代码里或本地JSON文件"><a href="#1-Mock-数据写在代码里或本地JSON文件" class="headerlink" title="1. Mock 数据写在代码里或本地JSON文件"></a>1. Mock 数据写在代码里或本地JSON文件</h3><p>缺点：</p><ul><li>Mock效果不好</li><li>与真实Server环境的切换非常麻烦，一切需要侵入代码切换环境的行为都是不好的</li></ul><h3 id="2-请求拦截"><a href="#2-请求拦截" class="headerlink" title="2. 请求拦截"></a>2. 请求拦截</h3><p>代表：<a href="http://mockjs.com/" target="_blank" rel="noopener">Mock.js</a><br>示例：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Mock.mock(&#123;</span><br><span class="line">  <span class="string">"array|1-10"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name|+1"</span>: [</span><br><span class="line">        <span class="string">"Hello"</span>,</span><br><span class="line">        <span class="string">"Mock.js"</span>,</span><br><span class="line">        <span class="string">"!"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">=&gt;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"array"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"Hello"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"Mock.js"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"!"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"Hello"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>原理：<br>重写XHR</p><p>优点：</p><ul><li>与前端代码分离</li><li>可生成随机数据</li></ul><p>缺点：</p><ul><li>数据都是动态生成的假数据，无法模拟增删改查的情况</li><li>只支持ajax，不支持fetch</li></ul><h3 id="3-接口管理工具"><a href="#3-接口管理工具" class="headerlink" title="3. 接口管理工具"></a>3. 接口管理工具</h3><p>代表：<code>RAP2</code>、<code>Swagger</code>、<code>moco</code>、…</p><p>优点：</p><ul><li>配置功能强大、可靠</li></ul><p>缺点</p><ul><li>配置复杂、依赖后端</li></ul><h4 id="4-本地-node-服务"><a href="#4-本地-node-服务" class="headerlink" title="4. 本地 node 服务"></a>4. 本地 node 服务</h4><p>代表：<a href="https://github.com/typicode/json-server" target="_blank" rel="noopener">json-server</a><br>优点：</p><ul><li>配置简单，快速启一个RESTful API服务</li><li>自定义程度高</li><li>增删改查真实模拟</li></ul><p>缺点：</p><ul><li>无法和后端保持同步</li></ul><h4 id="5-Mock-Service-Worker"><a href="#5-Mock-Service-Worker" class="headerlink" title="5. Mock Service Worker"></a>5. <a href="https://mswjs.io" target="_blank" rel="noopener">Mock Service Worker</a></h4><p>优点：</p><ul><li>基于 Service Worker 实现请求拦截，行为和真实请求非常一致，想法很特别</li><li>不需要切换环境，不用依赖后端</li><li>配置容易，搭建起来十分方便</li></ul><p>缺点：</p><ul><li>无法和后端同步更新</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Development </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
       
     </entry>
     
@@ -121,31 +175,6 @@
             <tag> DevOps </tag>
             
             <tag> Tools </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>前端 Mock 数据的一些可选方案</title>
-      <link href="/fe/JavaScript/12.mock-solutions/"/>
-      <url>/fe/JavaScript/12.mock-solutions/</url>
-      
-        <content type="html"><![CDATA[<h3 id="1-Mock-数据写在代码里或本地JSON文件"><a href="#1-Mock-数据写在代码里或本地JSON文件" class="headerlink" title="1. Mock 数据写在代码里或本地JSON文件"></a>1. Mock 数据写在代码里或本地JSON文件</h3><p>缺点：</p><ul><li>Mock效果不好</li><li>与真实Server环境的切换非常麻烦，一切需要侵入代码切换环境的行为都是不好的</li></ul><h3 id="2-请求拦截"><a href="#2-请求拦截" class="headerlink" title="2. 请求拦截"></a>2. 请求拦截</h3><p>代表：<a href="http://mockjs.com/" target="_blank" rel="noopener">Mock.js</a><br>示例：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Mock.mock(&#123;</span><br><span class="line">  <span class="string">"array|1-10"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name|+1"</span>: [</span><br><span class="line">        <span class="string">"Hello"</span>,</span><br><span class="line">        <span class="string">"Mock.js"</span>,</span><br><span class="line">        <span class="string">"!"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">=&gt;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"array"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"Hello"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"Mock.js"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"!"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"Hello"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>原理：<br>重写XHR</p><p>优点：</p><ul><li>与前端代码分离</li><li>可生成随机数据</li></ul><p>缺点：</p><ul><li>数据都是动态生成的假数据，无法模拟增删改查的情况</li><li>只支持ajax，不支持fetch</li></ul><h3 id="3-接口管理工具"><a href="#3-接口管理工具" class="headerlink" title="3. 接口管理工具"></a>3. 接口管理工具</h3><p>代表：<code>RAP2</code>、<code>Swagger</code>、<code>moco</code>、…</p><p>优点：</p><ul><li>配置功能强大、可靠</li></ul><p>缺点</p><ul><li>配置复杂、依赖后端</li></ul><h4 id="4-本地-node-服务"><a href="#4-本地-node-服务" class="headerlink" title="4. 本地 node 服务"></a>4. 本地 node 服务</h4><p>代表：<a href="https://github.com/typicode/json-server" target="_blank" rel="noopener">json-server</a><br>优点：</p><ul><li>配置简单，快速启一个RESTful API服务</li><li>自定义程度高</li><li>增删改查真实模拟</li></ul><p>缺点：</p><ul><li>无法和后端保持同步</li></ul><h4 id="5-Mock-Service-Worker"><a href="#5-Mock-Service-Worker" class="headerlink" title="5. Mock Service Worker"></a>5. <a href="https://mswjs.io" target="_blank" rel="noopener">Mock Service Worker</a></h4><p>优点：</p><ul><li>基于 Service Worker 实现请求拦截，行为和真实请求非常一致，想法很特别</li><li>不需要切换环境，不用依赖后端</li><li>配置容易，搭建起来十分方便</li></ul><p>缺点：</p><ul><li>无法和后端同步更新</li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> Development </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> JavaScript </tag>
             
         </tags>
       
