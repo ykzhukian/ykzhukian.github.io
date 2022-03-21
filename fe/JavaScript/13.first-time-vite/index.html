@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>Vite 踩坑 | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Vite 踩坑</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Vite 踩坑</h1><div class="post-meta">2021-06-28<span> | </span><span class="category"><a href="/categories/Development/">Development</a></span></div><a class="disqus-comment-count" data-disqus-identifier="fe/JavaScript/13.first-time-vite/" href="/fe/JavaScript/13.first-time-vite/#disqus_thread"></a><div class="post-content"><h2 id="Vite"><a href="#Vite" class="headerlink" title="Vite"></a><a href="https://vitejs.dev" target="_blank" rel="noopener">Vite</a></h2><p>Vite 2.0 带着 <a href="https://github.com/evanw/esbuild" target="_blank" rel="noopener">esbuild</a>，以及对 React 项目的支持来了，我被这个打包耗时对比图打动，于是决定尝试一下。</p>
+<p>用之前了解了一下 Vite 的受限：</p>
+<ol>
+<li>只支持 ESM，其他例如 CJS 等可以用<a href="https://github.com/vitejs/vite/tree/main/packages/plugin-legacy" target="_blank" rel="noopener">插件兼容</a> (<a href="https://irian.to/blogs/what-are-cjs-amd-umd-and-esm-in-javascript/" target="_blank" rel="noopener">ESM?</a>)</li>
+<li>对浏览器原生倒模块能力的依赖<ul>
+<li>Chrome &gt;=61</li>
+<li>Firefox &gt;=60</li>
+<li>Safari &gt;=11</li>
+<li>Edge &gt;=16</li>
+</ul>
+</li>
+<li>生态一般</li>
+</ol>
+<p>感觉对将要新启的项目没什么影响。</p>
+<h2 id="1-esbuild-不支持-React-17-新的-jsx-transform"><a href="#1-esbuild-不支持-React-17-新的-jsx-transform" class="headerlink" title="1. esbuild 不支持 React 17 新的 jsx transform"></a>1. esbuild 不支持 React 17 新的 jsx transform</h2><p>React 17 提供了一个<a href="https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html" target="_blank" rel="noopener">新的 JSX 转义方式</a>，是<a href="https://babeljs.io/blog/2020/03/16/7.9.0#a-new-jsx-transform-11154httpsgithubcombabelbabelpull11154" target="_blank" rel="noopener">和 Babel 合作</a>搞的。</p>
+<p>简单来讲就是不需要在每个 <code>.jsx</code> 中引入 React，不用 <code>import React from &#39;react&#39;;</code>。<br>在编译的时候，babel 会自动引入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; jsx <span class="keyword">as</span> _jsx &#125; <span class="keyword">from</span> <span class="string">'react/jsx-runtime'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然而，Vite 没有。如果想在项目里使用同样的能力，就需要在 <code>vite.config.ts</code> 中配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">esbuild: &#123;</span><br><span class="line">  jsxInject: <span class="string">`import React from 'react'`</span> <span class="comment">// esbuild 暂时不支持 React 17 新的 jsx transform，暂时这样</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>假装也可以做到。。。</p>
+<h2 id="2-路径别名一定要斜线开头"><a href="#2-路径别名一定要斜线开头" class="headerlink" title="2. 路径别名一定要斜线开头"></a>2. 路径别名一定要斜线开头</h2><p>绝对路径会看起来对项目结构和代码理解更清晰一些，但 Vite 不能支持 <code>@</code> 开头，只能 <code>/</code> 开头来引入。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="string">'/@/'</span>: path.resolve(__dirname, <span class="string">'src'</span>); <span class="comment">// 别名必须以斜线开头和结尾</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 或者：</span></span><br><span class="line">    alias: [</span><br><span class="line">      &#123; <span class="attr">find</span>: <span class="regexp">/^~/</span>, <span class="attr">replacement</span>: <span class="string">''</span> &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原因是，<br>Vite 的 Dev Server 用的是浏览器自己对于 ESM 的引入方式。当用到一下方式引入依赖的时候：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Suspense, lazy &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br></pre></td></tr></table></figure>
+<p>浏览器并不知道 <code>react</code> 库在 <code>node_modules</code> 里，它只能用相对和绝对路径去找。此处 Vite 1.0 是在本地起了一个 koa 服务，代理这些模块。Vite 2.0 也是<a href="https://github.com/vitejs/vite/blob/main/packages/vite/src/node/server/index.ts" target="_blank" rel="noopener">一个 node 服务</a>，当浏览器读取到 html 文件并执行到 import xxx 时，才向该服务去请求这个模块，这就保证了只有在真正使用到这个模块的时候，浏览器才会请求并解析这个模块，将按需加载做到极致。</p>
+<p>这个服务起来之前，Vite 会用 esbuild 去<a href="https://cn.vitejs.dev/guide/dep-pre-bundling.html" target="_blank" rel="noopener">预构建依赖</a>，来加速浏览器请求相应模块的速度。</p>
+<p>Vite 对所有 import 都做了处理，用带有 @modules 的前缀重写它们。</p>
+<h2 id="3-本地开发和打包出来的是两个东西"><a href="#3-本地开发和打包出来的是两个东西" class="headerlink" title="3. 本地开发和打包出来的是两个东西"></a>3. 本地开发和打包出来的是两个东西</h2><blockquote>
+<p>虽然 esbuild 快得惊人，并且已经是一个在构建库方面比较出色的工具，但一些针对构建 应用 的重要功能仍然还在持续开发中。</p>
+</blockquote>
+<p>所以，本地开发的时候得益于 esbuild 相当快的热更新、项目启动速度，但是生产环境还是用的 Rollup。难免会有一些不一样的表现。</p>
+<h2 id="4-接入微前端操作困难"><a href="#4-接入微前端操作困难" class="headerlink" title="4. 接入微前端操作困难"></a>4. 接入微前端操作困难</h2><p>由于开发模式只支持 ESM，接入微前端（例如<a href="https://qiankun.umijs.org/" target="_blank" rel="noopener">乾坤</a>框架时）需要打包成 UMD，所以过程很麻烦，体验很不好，一度让我想用回 Webpack。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>开发时的体验还是很好的，React 项目可以非常快速地启动以及 HMR，尤其是二次启动。而且修改打包器的配置(vite.config.ts)，都不需要 <code>CTL + C</code> 重启服务。<br>但是考虑到生产环境以及一些对打包方式有特别需求的场景，就不太香了。还是更期待以后的迭代。</p>
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a><a href="/tags/React/"><i class="fa fa-tag"></i>React</a><a href="/tags/Tools/"><i class="fa fa-tag"></i>Tools</a></div><div class="post-nav"><a class="pre" href="/case-study/earth-globe/">模仿 GitHub 首页的地球 🌍</a><a class="next" href="/reading/5.doge/">看到一个挺有意思的讨论</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/fe/JavaScript/13.first-time-vite/';
+    this.page.identifier = 'fe/JavaScript/13.first-time-vite/';
+    this.page.title = 'Vite 踩坑';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

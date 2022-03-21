@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>Websocket 实现实时消息推送弹窗 | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Websocket 实现实时消息推送弹窗</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Websocket 实现实时消息推送弹窗</h1><div class="post-meta">2020-12-01<span> | </span><span class="category"><a href="/categories/Development/">Development</a></span></div><a class="disqus-comment-count" data-disqus-identifier="fe/JavaScript/11.ws-notification/" href="/fe/JavaScript/11.ws-notification/#disqus_thread"></a><div class="post-content"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>CRM系统，销售用的时候感觉整个系统的主动性不够高。待办事项、预警、消息提醒等都没有特别明显的弹窗提示，所以有了这次改造。<br>原先SSE的方案，每秒钟会进行一次和服务器的交互：</p>
+<ul>
+<li>不够灵活，没有必要每1秒问一下有没有消息</li>
+<li>新消息不会弹窗提醒</li>
+<li>打开多个标签页的时候，其中一个更新已读信息，不会同步给其他的页面</li>
+</ul>
+<h2 id="HTTP-keep-alive-Vs-Websocket"><a href="#HTTP-keep-alive-Vs-Websocket" class="headerlink" title="HTTP keep-alive Vs Websocket"></a>HTTP keep-alive Vs Websocket</h2><ul>
+<li>两者都是为了减少TCP的三次握手，四次挥手次数，即在一次TCP连接中做更多的事情</li>
+<li>HTTP keep-alive <ul>
+<li>在一次TCP连接中，进行多次HTTP的请求，但是这些请求都是无连接和无状态的。<ul>
+<li>无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间；</li>
+<li>无状态：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。</li>
+<li>keep-alive 可以改善这种特性，在一次TCP连接中可以持续发送多份数据而不会断开连接。通过使用keep-alive机制，避免了建立或者重新建立连接的次数。</li>
+</ul>
+</li>
+<li>所以HTTP虽然开启 keep-alive，每一次请求还是独立的，需要每次都将身份信息放在Header中，告诉服务端，并且需要客户端发起。</li>
+</ul>
+</li>
+<li>Websocket<ul>
+<li>通过第一个 HTTP 请求建立了 TCP 连接之后，之后的交换数据都不需要再发 HTTP 了，使得这个连接变成了一个真正的长连接，直到断开。</li>
+<li>双向的通信，可以由服务端发送也可以由客户端发送消息。</li>
+</ul>
+</li>
+</ul>
+<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><ul>
+<li>每次建立连接时，客户端告诉服务端这个Websocket实例是为谁而建（当前登录的ID），服务端将实例推入一个列表放入内存中。</li>
+<li>在有新消息时，服务端（<a href="https://websockets.readthedocs.io/en/stable/intro.html" target="_blank" rel="noopener">python websockets</a>）向客户端推送消息。</li>
+<li>客户端获取新消息对象，包括类型和内容，加入本地的状态中（Redux中原有的消息列表），如果点击查看则发送已读消息像服务端，然后服务端广播已读结果，将同一个用户各个标签页的消息列表都进行更新。</li>
+</ul>
+<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><h3 id="同步的消息弹窗"><a href="#同步的消息弹窗" class="headerlink" title="同步的消息弹窗"></a>同步的消息弹窗</h3><img class="article-image" src="/images/fe/ws-notification.gif" width="500" alt="四个标签页同时更新" />
+
+<h3 id="同步的线索消息"><a href="#同步的线索消息" class="headerlink" title="同步的线索消息"></a>同步的线索消息</h3><img class="article-image" src="/images/fe/pop-mickey.gif" width="500" alt="四个标签页同时更新" />
+
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a></div><div class="post-nav"><a class="pre" href="/fe/CSS/4.devops-ui/">DevOps UI 设计</a><a class="next" href="/fe/JavaScript/10.micro-fe/">微前端分享记录</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/fe/JavaScript/11.ws-notification/';
+    this.page.identifier = 'fe/JavaScript/11.ws-notification/';
+    this.page.title = 'Websocket 实现实时消息推送弹窗';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

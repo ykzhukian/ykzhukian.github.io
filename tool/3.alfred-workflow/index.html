@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>Alfred Workflow 时间戳 | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Alfred Workflow 时间戳</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Alfred Workflow 时间戳</h1><div class="post-meta">2020-11-12<span> | </span><span class="category"><a href="/categories/Development/">Development</a></span></div><a class="disqus-comment-count" data-disqus-identifier="tool/3.alfred-workflow/" href="/tool/3.alfred-workflow/#disqus_thread"></a><div class="post-content"><h2 id="时间戳转化工具"><a href="#时间戳转化工具" class="headerlink" title="时间戳转化工具"></a>时间戳转化工具</h2><p>原先找了个别人写的 <a href="http://www.packal.org/workflow/timestamp" target="_blank" rel="noopener">Timestamp</a>， 但是用着不方便，转换结果需要粘贴出来才能看到，一般情况下其实只要瞄一眼就好了。于是想让结果直接显示在列表里。</p>
+<h2 id="XML"><a href="#XML" class="headerlink" title="XML"></a>XML</h2><p>查了下文档 Alfred 只支持 xml 格式的数据来列表展示。发现原来的工具无法兼容。自己写一个：</p>
+<ul>
+<li>创建新的 Workflow</li>
+<li>右键添加 <code>Inputs</code> -&gt; <code>Script Filter</code></li>
+</ul>
+<img src="/images/reading/alfred-ts.png" width="100%" alt="就用php吧，自带一些文字日期转换" />
+
+<ul>
+<li><p>选择语言：Language - php</p>
+</li>
+<li><p>with input as {query}</p>
+</li>
+<li><p>Script：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$query = <span class="string">'&#123;query&#125;'</span>;</span><br><span class="line">$result = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// If the input is empty or 'now', return the current timestamp.</span></span><br><span class="line"><span class="keyword">if</span> ($query == <span class="string">'now'</span> || $query == <span class="string">''</span>) &#123;</span><br><span class="line">	$result = @time();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// If the input is an integer, output the datetime.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (is_numeric($query)) &#123;</span><br><span class="line">	$result = @date(<span class="string">'Y-m-d h:i:s'</span>, $query);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Otherwise, use strtotime to convert the string.</span></span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">	$result = @strtotime($query);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;?xml version="1.0"?&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;items&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;item uid="timestamp" arg="'</span>.$result.<span class="string">'"&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;title&gt;结果为: '</span> .$result. <span class="string">'&lt;/title&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;subtitle&gt;Press Enter to paste&lt;/subtitle&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;icon&gt;icon.png&lt;/icon&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/item&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/items&gt;'</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>粘贴</p>
+</li>
+</ul>
+<img class="small-image" src="/images/reading/alfred-paste.png" alt="粘贴" />
+
+<ul>
+<li>效果</li>
+</ul>
+<img class="small-image" src="/images/reading/alfred-ts-done.png" alt="文字转时间戳" />
+<img class="small-image" src="/images/reading/alfred-ts-stamp.png" alt="Timestamp to string" />
+</div><div class="tags"><a href="/tags/Tools/"><i class="fa fa-tag"></i>Tools</a></div><div class="post-nav"><a class="pre" href="/fe/JavaScript/10.micro-fe/">微前端分享记录</a><a class="next" href="/fe/JavaScript/9.javascript-sonar/">前端项目接入 SonarQube</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/tool/3.alfred-workflow/';
+    this.page.identifier = 'tool/3.alfred-workflow/';
+    this.page.title = 'Alfred Workflow 时间戳';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>私有 npm 仓库 Nexus &amp; 工具库配合 GitLab 自动发布 | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">私有 npm 仓库 Nexus &amp; 工具库配合 GitLab 自动发布</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">私有 npm 仓库 Nexus &amp; 工具库配合 GitLab 自动发布</h1><div class="post-meta">2021-12-27<span> | </span><span class="category"><a href="/categories/Development/">Development</a></span></div><a class="disqus-comment-count" data-disqus-identifier="fe/Engineering/1.private-npm-nexus/" href="/fe/Engineering/1.private-npm-nexus/#disqus_thread"></a><div class="post-content"><!-- >  -->
+
+<h2 id="1-搭建-Nexus"><a href="#1-搭建-Nexus" class="headerlink" title="1. 搭建 Nexus"></a>1. 搭建 Nexus</h2><p>这部分内容网上有非常多的教程可以参考。</p>
+<h3 id="1-1-本地临时起个-docker-container-用于玩耍"><a href="#1-1-本地临时起个-docker-container-用于玩耍" class="headerlink" title="1.1 本地临时起个 docker container 用于玩耍"></a>1.1 本地临时起个 docker container 用于玩耍</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull sonatype/nexus3  <span class="comment"># 官方镜像</span></span><br></pre></td></tr></table></figure>
+
+<p>创建 Container 设置本地端口 8000<br><img class="article-image" src="/images/case-study/nexus-repository/localhost-8000.png" alt="本地访问 localhost:8000" /><br>打开后在会提示<code>admin</code>的密码在这个文件里：<code>/nexus-data/admin.password</code><br>照做后进入界面。</p>
+<h3 id="1-2-创建-blob-存储"><a href="#1-2-创建-blob-存储" class="headerlink" title="1.2 创建 blob 存储"></a>1.2 创建 blob 存储</h3><img class="article-image" src="/images/case-study/nexus-repository/blob-create.png" alt="npm-hub" />
+
+<p>之后的内容可以参考这篇文章：<a href="https://www.cnblogs.com/54chensongxia/p/14930128.html" target="_blank" rel="noopener">使用Nexus搭建npm私服</a><br>简述一下就是创建了 2 个 npm 的 Repository + 1 个 group</p>
+<ol>
+<li>local-npm 本地自己的仓库</li>
+<li>proxy-npm 远程仓库地址</li>
+<li>group-npm 将2个仓库，添加到group中</li>
+</ol>
+<h4 id="可以修改的一处是加一个淘宝的镜像-registry-的-Repository"><a href="#可以修改的一处是加一个淘宝的镜像-registry-的-Repository" class="headerlink" title="可以修改的一处是加一个淘宝的镜像 registry 的 Repository"></a>可以修改的一处是加一个淘宝的镜像 registry 的 Repository</h4><p>命名为：taobao-npm<br>Proxy 填写：<a href="https://registry.npm.taobao.org" target="_blank" rel="noopener">https://registry.npm.taobao.org</a><br>并且也加到刚才的 <code>group-npm</code> 中。</p>
+<h4 id="另外值得注意的是-local-npm-中，Deployment-policy-的设置可以是："><a href="#另外值得注意的是-local-npm-中，Deployment-policy-的设置可以是：" class="headerlink" title="另外值得注意的是 local-npm 中，Deployment policy 的设置可以是："></a>另外值得注意的是 local-npm 中，<code>Deployment policy</code> 的设置可以是：</h4><ol>
+<li>Allow redeploy</li>
+<li>Disable redeploy<br>…<br>用来控制 npm publish 的时候，相同的版本号是否允许发布并且覆盖原来的内容，这个根据实际策略来决定，我们最终方案选择保留两个本地仓库，一个允许覆盖，一个严格要求版本号递增。</li>
+</ol>
+<h4 id="还有一个要做的是在-Realms-中把-npm-Bearer-Token-Realm-加到右边的-Active-列表中"><a href="#还有一个要做的是在-Realms-中把-npm-Bearer-Token-Realm-加到右边的-Active-列表中" class="headerlink" title="还有一个要做的是在 Realms 中把 npm Bearer Token Realm 加到右边的 Active 列表中"></a>还有一个要做的是在 Realms 中把 <code>npm Bearer Token Realm</code> 加到右边的 Active 列表中</h4><img class="article-image" src="/images/case-study/nexus-repository/realms.png" alt="Realms" />
+
+<h2 id="2-使用私有-npm-仓库"><a href="#2-使用私有-npm-仓库" class="headerlink" title="2. 使用私有 npm 仓库"></a>2. 使用私有 npm 仓库</h2><p>在 Repository 中找到 local-npm，点击 copy 可以看到本地仓库的地址<br><img class="article-image" width="500" src="/images/case-study/nexus-repository/registry-url.png" alt="local-npm registry" /></p>
+<p>然后在实际的项目中修改 registry(仓库组的那个地址) 就可以使用了</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry http://localhost:8000/repository/group-npm/</span><br></pre></td></tr></table></figure>
+
+<p>或者， 避免在全局修改 registry，可以在项目根目录下的 <code>.npmrc</code> 文件中加入：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">registry=http:<span class="regexp">//</span>localhost:<span class="number">8000</span><span class="regexp">/repository/g</span>roup-npm<span class="regexp">/</span></span><br></pre></td></tr></table></figure>
+
+<p><small><em>如果有 401 错误，记得检查一下有没有在 Realms 中把 <code>npm Bearer Token Realm</code> 加到右边的 Active 列表中</em></small><br><small><em>也要注意 .npmrc 中是否已经配置过别的 registry</em></small></p>
+<ul>
+<li>第一次 install 会比较缓慢，但是每次下载依赖的时候 Nexus 会缓存一份，所以下一次下载会很快</li>
+</ul>
+<h2 id="3-npm-publish-发布到私有-Nexus-仓库中"><a href="#3-npm-publish-发布到私有-Nexus-仓库中" class="headerlink" title="3. npm publish 发布到私有 Nexus 仓库中"></a>3. npm publish 发布到私有 Nexus 仓库中</h2><p>在发布之前需要看一下用户权限问题。</p>
+<ul>
+<li><p>使用 <code>admin</code> 用户来发布当然是没有问题，但是以后一定会分不同的权限角色，不能将 <code>admin</code> 的权限给所有发布的人。</p>
+<ol>
+<li><p>可以在 Nexus 中创建一个用于允许<code>发布</code>的角色 <code>nx-deploy</code>。</p>
+<img class="article-image" src="/images/case-study/nexus-repository/nexus-role.png" alt="创建 deploy 角色" />
+
+<p>并且给这个角色 <code>nx-component-upload</code> 和 <code>nx-repository-view</code> 的权限</p>
+</li>
+<li><p>基于这个角色，创建一个可以发布的用户： 下图中的 <code>deployment</code></p>
+<img class="article-image" src="/images/case-study/nexus-repository/user-create.png" alt="创建 deployment 用户" />
+
+</li>
+</ol>
+</li>
+</ul>
+<p>有了这个用户后就可以登录了。</p>
+<ol>
+<li>npm login<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm login --registry=<span class="string">http:</span><span class="comment">//localhost:8000/repository/local-npm/</span></span><br><span class="line"><span class="string">username:</span> deployment</span><br><span class="line"><span class="string">password:</span> xxxx</span><br></pre></td></tr></table></figure>
+注意是本地仓库的地址，而不是安装时的 registry</li>
+</ol>
+<p><small><em>如果登录失败可以检查一下 .npmrc 中的 registry 或者 有无已经配置的用户名密码</em></small></p>
+<ol start="2">
+<li>npm publish<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish --registry=http:<span class="regexp">//</span>localhost:<span class="number">8000</span><span class="regexp">/repository/</span>local-npm<span class="regexp">/</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h2 id="4-使用-GitLab-CI-把发布自动化"><a href="#4-使用-GitLab-CI-把发布自动化" class="headerlink" title="4. 使用 GitLab CI 把发布自动化"></a>4. 使用 GitLab CI 把发布自动化</h2><p>自动化就要省去所有手敲命令</p>
+<ol>
+<li><p>首先在工具库项目下的 <code>package.json</code> 文件中加入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"publishConfig"</span>: &#123;</span><br><span class="line">  <span class="string">"registry"</span>: <span class="string">"http://localhost:8000/repository/local-npm/"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>.npmrc</code> 文件中</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">registry</span>=http://localhost:<span class="number">8000</span>/repository/group-npm/</span><br><span class="line"><span class="attr">always-auth</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">_auth</span>=ZGVwbG95bWVudDoxMjMxMjM=</span><br></pre></td></tr></table></figure>
+<p><em>_auth 的生成方式是：base64Encode(&lt;username&gt;:&lt;password&gt;)</em></p>
+</li>
+</ol>
+<p><em>如果觉得这样写 token 不安全，可以将 token 放到 GitLab 的换进环境变量中，然后在 CI 中写入 .npmrc：</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- <span class="built_in">echo</span> <span class="string">"http://localhost:8000/repository/group-npm/:_authToken=<span class="variable">$&#123;NPM_TOKEN&#125;</span>"</span> &gt; .npmrc</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>配置 <code>.gitlab-ci.yml</code></li>
+</ol>
+<p>简述一下步骤就是:</p>
+<ul>
+<li>build 生成发布所需的 dist/</li>
+<li>执行 npm publish</li>
+</ul>
+<p>可以参考：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">image:</span> <span class="string">一个有node环境的基础镜像即可</span></span><br><span class="line"></span><br><span class="line"><span class="attr">stages:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">build</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">publish</span></span><br><span class="line"></span><br><span class="line"><span class="attr">build:</span></span><br><span class="line">  <span class="attr">stage:</span> <span class="string">build</span></span><br><span class="line">  <span class="attr">only:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">master</span></span><br><span class="line">  <span class="attr">before_script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">npm</span> <span class="string">i</span></span><br><span class="line">  <span class="attr">script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build</span></span><br><span class="line">  <span class="attr">cache:</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node_modules/</span></span><br><span class="line">  <span class="attr">artifacts:</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">dist/</span></span><br><span class="line"></span><br><span class="line"><span class="attr">npm-publish:</span></span><br><span class="line">  <span class="attr">stage:</span> <span class="string">publish</span></span><br><span class="line">  <span class="attr">when:</span> <span class="string">manual</span></span><br><span class="line">  <span class="attr">only:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">master</span></span><br><span class="line">  <span class="attr">script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">npm</span> <span class="string">publish</span></span><br></pre></td></tr></table></figure>
+
+<p><em>有人喜欢把 build 放在 script 里的 prepublishOnly，那这里就可以跳过 build 阶段</em></p>
+<h2 id="5-TODO-使用-git-hook-自动更新版本号"><a href="#5-TODO-使用-git-hook-自动更新版本号" class="headerlink" title="5. TODO: 使用 git hook 自动更新版本号"></a>5. TODO: 使用 git hook 自动更新版本号</h2><p><em>tbc…</em></p>
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a><a href="/tags/DevOps/"><i class="fa fa-tag"></i>DevOps</a><a href="/tags/Tools/"><i class="fa fa-tag"></i>Tools</a></div><div class="post-nav"><a class="pre" href="/photo/2.2022-qingdao/">青岛跨年</a><a class="next" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/fe/Engineering/1.private-npm-nexus/';
+    this.page.identifier = 'fe/Engineering/1.private-npm-nexus/';
+    this.page.title = '私有 npm 仓库 Nexus &amp; 工具库配合 GitLab 自动发布';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

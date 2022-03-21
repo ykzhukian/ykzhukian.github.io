@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>算法图解 Grokking Algorithms | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">算法图解 Grokking Algorithms</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">算法图解 Grokking Algorithms</h1><div class="post-meta">2020-10-14<span> | </span><span class="category"><a href="/categories/Reading-Notes/">Reading Notes</a></span></div><a class="disqus-comment-count" data-disqus-identifier="reading/2.grokking-algorithms/" href="/reading/2.grokking-algorithms/#disqus_thread"></a><div class="post-content"><p>一本非常基础的算法书，补补脑子。</p>
+<h3 id="一、大O表示法"><a href="#一、大O表示法" class="headerlink" title="一、大O表示法"></a>一、大O表示法</h3><ul>
+<li>算法的运行时间以不同的速度增加</li>
+<li>大O表示法指出了最糟情况下的运行时间</li>
+<li>一些常见的大O运行时间<ul>
+<li>O(log n) 对数时间，比如二分查找</li>
+<li>O(n) 线性时间，比如简单查找</li>
+<li>O(n * logn) 快速排序</li>
+<li>O(n^2) 选择排序</li>
+<li>O(n!) 非常慢</li>
+</ul>
+</li>
+<li>大O中省略常数</li>
+</ul>
+<h4 id="Summary-1"><a href="#Summary-1" class="headerlink" title="Summary 1."></a>Summary 1.</h4><ul>
+<li>二分查找的速度比简单查找快得多</li>
+<li>O(log n) 比 O(n) 快</li>
+<li>算法运行时间并不以秒为单位</li>
+<li>算法运行时间是从其增速的角度度量的</li>
+<li>算法运行时间用大O表示法表示</li>
+</ul>
+<h3 id="二、选择排序"><a href="#二、选择排序" class="headerlink" title="二、选择排序"></a>二、选择排序</h3><ul>
+<li>内存：每个抽屉都有地址，存入的东西都记录地址</li>
+<li>数组和链表<ul>
+<li>数组：读取快</li>
+<li>链表：插入、删除快</li>
+</ul>
+</li>
+<li>选择排序 O(n^2) 每次拿出剩余的最大/小项，共进行 n * n 次</li>
+</ul>
+<h4 id="Summary-2"><a href="#Summary-2" class="headerlink" title="Summary 2."></a>Summary 2.</h4><ul>
+<li>计算机内容犹如一大堆抽屉</li>
+<li>需要存储多个元素时，可使用数组或链表</li>
+<li>数组的元素都在一起</li>
+<li>链表的元素时分开的，其中每个元素都存储了下一个元素的地址</li>
+<li>数组的读取速度很快</li>
+<li>链表的插入和删除速度很快</li>
+<li>在同一个数组中，所有元素的类型都必须相同</li>
+</ul>
+<h3 id="三、递归"><a href="#三、递归" class="headerlink" title="三、递归"></a>三、递归</h3><ul>
+<li>递归指的是调用自己的函数</li>
+<li>每个递归函数都有两个条件：基本条件和递归条件</li>
+<li>栈有两种操作：压入和弹出</li>
+<li>所有函数调用都进入调用栈</li>
+<li>调用栈可能很长，这将占用大量的内存</li>
+</ul>
+<h3 id="四、快速排序"><a href="#四、快速排序" class="headerlink" title="四、快速排序"></a>四、快速排序</h3><ul>
+<li><p>D&amp;C算法是递归的。</p>
+<ol>
+<li>找出基线条件，这种条件必须尽可能简单。</li>
+<li>不断将问题分解（或者说缩小规模），直到符合基线条件。</li>
+</ol>
+</li>
+<li><p>复杂度 O(n * logn) （同归并排序）</p>
+</li>
+<li><p><code>欧几里得算法</code>又称<code>辗转相除法</code>，是指用于计算两个非负整数a，b的最大公约数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gcd</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (a % b == <span class="number">0</span>) <span class="keyword">return</span> b;</span><br><span class="line">  <span class="keyword">return</span> gcd(b, a % b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>函数式编程是声明式的一种类型，声明式强调目标而不是具体过程。</p>
+</li>
+</ul>
+<h4 id="Summary-4"><a href="#Summary-4" class="headerlink" title="Summary 4."></a>Summary 4.</h4><ul>
+<li>D&amp;C将问题逐步分解。使用D&amp;C处理列表时，基线条件很可能是空数组或只包含一个元素的数组。</li>
+<li>实现快速排序时，请随机地选择用作基准值的元素。快速排序的平均运行时间为 O(n * logn)。</li>
+<li>大O表示法中的常量有时候事关重大，这就是快速排序比归并排序快的原因所在。</li>
+<li>比较简单查找和二分查找时，常量几乎无关紧要，因为列表很长时，O(logn)的速度比O(n)快很多。</li>
+</ul>
+<h3 id="五、散列表-Hash-tabe"><a href="#五、散列表-Hash-tabe" class="headerlink" title="五、散列表 Hash tabe"></a>五、散列表 Hash tabe</h3><ul>
+<li>散列函数总是将同样的输入映射到相同的索引。每次你输入avocado，得到的都是同一个数字。因此，你可首先使用它来确定将鳄梨的价格存储在什么地方，并在以后使用它来确定鳄梨的价格存储在什么地方。</li>
+<li>散列函数将不同的输入映射到不同的索引。avocado映射到索引4，milk映射到索引0。每种商品都映射到数组的不同位置，让你能够将其价格存储到这里。</li>
+<li>散列函数知道数组有多大，只返回有效的索引。如果数组包含5个元素，散列函数就不会返回无效索引100。</li>
+<li>O(1) - O(n)</li>
+<li>在平均情况下，散列表的查找(获取给定索引处的值)速度与数组一样快</li>
+<li>填装因子大于1意味着商品数量超过了数组的位 置数。一旦填装因子开始增大，你就需要在散列表中添加位置，这被称为调整长度(resizing)。填装因子越低，发生冲突的可能性越小，<br>散列表的性能越高。</li>
+<li>一旦填装因子超过0.7，就该调整散列表的长度。</li>
+</ul>
+<h4 id="Summary-5"><a href="#Summary-5" class="headerlink" title="Summary 5."></a>Summary 5.</h4><p>散列表适用于：</p>
+<ul>
+<li>模拟映射关系;</li>
+<li>防止重复;</li>
+<li>缓存/记住数据，以免服务器再通过处理来生成它们。</li>
+</ul>
+<p>而要避免冲突，需要有:</p>
+<ul>
+<li>较低的填装因子; </li>
+<li>良好的散列函数。</li>
+</ul>
+<h3 id="六、广度优先搜索-Breadth-first-Search"><a href="#六、广度优先搜索-Breadth-first-Search" class="headerlink" title="六、广度优先搜索 Breadth-first Search"></a>六、广度优先搜索 Breadth-first Search</h3><ul>
+<li>图用于模拟一组连接。图由节点和边组成。一个节点可能与众多节点直接相连，这些节点被称为邻居。</li>
+<li>广度优先搜索：</li>
+</ul>
+<ol>
+<li>广度优先搜索指出是否有从A到B的路径。</li>
+<li>如果有，广度优先搜索将找出最短路径。</li>
+<li>面临类似于寻找最短路径的问题时，可尝试使用图来建立模型，再使用广度优先搜索来<br>解决问题。</li>
+<li>有向图中的边为箭头，箭头的方向指定了关系的方向，例如，rama→adit表示rama欠adit钱。</li>
+<li>无向图中的边不带箭头，其中的关系是双向的，例如，ross - rachel表示“ross与rachel约<br>会，而rachel也与ross约会”。</li>
+<li>队列是先进先出(FIFO)的。</li>
+<li>栈是后进先出(LIFO)的。</li>
+<li>你需要按加入顺序检查搜索列表中的人，否则找到的就不是最短路径，因此搜索列表必<br>须是队列。</li>
+<li>对于检查过的人，务必不要再去检查，否则可能导致无限循环。</li>
+</ol>
+<h3 id="七、狄克斯特拉算法"><a href="#七、狄克斯特拉算法" class="headerlink" title="七、狄克斯特拉算法"></a>七、狄克斯特拉算法</h3><ul>
+<li>广度优先搜索找出的是段数最少的路径。如果要找出最快的路径可使用另一种算法——狄克斯特拉算法(Dijkstra’s algorithm)。</li>
+</ul>
+<ol>
+<li>找出最便宜的（权重最小）节点</li>
+<li>对于该节点的邻居，检查是否有前往它们的更短路径，如果有，就更新其开销。</li>
+<li>重复这个过程，直到对图中的每个节点都这样做了。</li>
+<li>计算最终路径。</li>
+</ol>
+<ul>
+<li>加权图(weighted graph)</li>
+<li>非加权图(unweighted graphQ34567809  -=<br>在无向图中，每条边都是一个环。狄克斯特拉算法只适用于有向无环图(directed acyclic graph，DAG)。</li>
+</ul>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>要编写解决这个问题的代码，需要三个散列表。</p>
+<h4 id="Summary-7"><a href="#Summary-7" class="headerlink" title="Summary 7."></a>Summary 7.</h4><ul>
+<li>广度优先搜索用于在非加权图中查找最短路径。</li>
+<li>狄克斯特拉算法用于在加权图中查找最短路径。</li>
+<li>仅当权重为正时狄克斯特拉算法才管用。</li>
+<li>如果图中包含负权边，请使用贝尔曼福德算法。</li>
+</ul>
+<h3 id="八、贪婪算法"><a href="#八、贪婪算法" class="headerlink" title="八、贪婪算法"></a>八、贪婪算法</h3><ul>
+<li>每步都选择局部最优解，最终得到的就是全局最优解。</li>
+</ul>
+<p>教室分配课程：<br>(1) 选出结束最早的课，它就是要在这间教室上的第一堂课。<br>(2) 接下来，必须选择第一堂课结束后才开始的课。同样，你选择结束最早的课，这将是要<br>在这间教室上的第二堂课。</p>
+<h4 id="NP完全问题"><a href="#NP完全问题" class="headerlink" title="NP完全问题"></a>NP完全问题</h4><ul>
+<li>元素较少时算法的运行速度非常快，但随着元素数量的增加，速度会变得非常慢。</li>
+<li>涉及“所有组合”的问题通常是NP完全问题。</li>
+<li>不能将问题分成小问题，必须考虑各种可能的情况。这可能是NP完全问题。</li>
+<li>如果问题涉及序列（如旅行商问题中的城市序列）且难以解决，它可能就是NP完全问题。</li>
+<li>如果问题涉及集合（如广播台集合）且难以解决，它可能就是NP完全问题。</li>
+<li>如果问题可转换为集合覆盖问题或旅行商问题，那它肯定是NP完全问题。</li>
+</ul>
+<h4 id="Summary-8"><a href="#Summary-8" class="headerlink" title="Summary 8."></a>Summary 8.</h4><ul>
+<li>贪婪算法寻找局部最优解，企图以这种方式获得全局最优解。</li>
+<li>对于NP完全问题，还没有找到快速解决方案。</li>
+<li>面临NP完全问题时，最佳的做法是使用近似算法。</li>
+<li>贪婪算法易于实现、运行速度快，是不错的近似算法。</li>
+</ul>
+<h3 id="九、动态规划"><a href="#九、动态规划" class="headerlink" title="九、动态规划"></a>九、动态规划</h3><ul>
+<li>动态规划从小问题着手，逐步解决大问题</li>
+</ul>
+<h4 id="Summary-9"><a href="#Summary-9" class="headerlink" title="Summary 9."></a>Summary 9.</h4><p>需要在给定约束条件下优化某种指标时，动态规划很有用。</p>
+<ul>
+<li>问题可分解为离散子问题时，可使用动态规划来解决。</li>
+<li>每种动态规划解决方案都涉及网格。</li>
+<li>单元格中的值通常就是你要优化的值。</li>
+<li>每个单元格都是一个子问题，因此你需要考虑如何将问题分解为子问题。</li>
+<li>没有放之四海皆准的计算动态规划解决方案的公式。</li>
+</ul>
+<h3 id="十、K最近邻算法"><a href="#十、K最近邻算法" class="headerlink" title="十、K最近邻算法"></a>十、K最近邻算法</h3><ul>
+<li>K：和目标最近的K个近邻</li>
+</ul>
+<h4 id="特征抽取"><a href="#特征抽取" class="headerlink" title="特征抽取"></a>特征抽取</h4><ol>
+<li>抽取它们的特征，再根据特征绘图</li>
+<li>计算两坐标距离</li>
+</ol>
+<h4 id="OCR指的是光学字符识别，使用KNN算法"><a href="#OCR指的是光学字符识别，使用KNN算法" class="headerlink" title="OCR指的是光学字符识别，使用KNN算法"></a>OCR指的是光学字符识别，使用KNN算法</h4><ul>
+<li>OCR的第一步是查看大量的数字图像并提取特征，这被称为训练（training）。大多数机器学<br>习算法都包含训练的步骤：要让计算机完成任务，必须先训练它。下一个示例是垃圾邮件过滤器，<br>其中也包含训练的步骤。</li>
+</ul>
+<h4 id="Summary-10"><a href="#Summary-10" class="headerlink" title="Summary 10."></a>Summary 10.</h4><p>KNN用于分类和回归，需要考虑最近的邻居。</p>
+<ul>
+<li>分类就是编组。</li>
+<li>回归就是预测结果（如数字）。</li>
+<li>特征抽取意味着将物品（如水果或用户）转换为一系列可比较的数字。</li>
+<li>能否挑选合适的特征事关KNN算法的成败。</li>
+</ul>
+</div><div class="tags"><a href="/tags/Read/"><i class="fa fa-tag"></i>Read</a></div><div class="post-nav"><a class="pre" href="/fe/JavaScript/8.object-key-convertor/">弄个小库用来把对象的所有 key 转为 snake_case 或 camelCase</a><a class="next" href="/fe/React/2.custom-hook/">封装一个处理异步 Loading 的 React Custom Hook</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/reading/2.grokking-algorithms/';
+    this.page.identifier = 'reading/2.grokking-algorithms/';
+    this.page.title = '算法图解 Grokking Algorithms';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

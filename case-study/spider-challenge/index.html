@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>爬虫攻防战 🕷 | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">爬虫攻防战 🕷</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">爬虫攻防战 🕷</h1><div class="post-meta">2021-08-26<span> | </span><span class="category"><a href="/categories/Case-Study/">Case Study</a></span></div><a class="disqus-comment-count" data-disqus-identifier="case-study/spider-challenge/" href="/case-study/spider-challenge/#disqus_thread"></a><div class="post-content"><p>我们是守方，我负责活动的前端页面和node服务，作为先锋，拦一些比较简单的爬虫，并留一些陷阱。</p>
+<p>参加者攻破前端页面以后，就要靠我方<a href="/case-study/earth-globe">神盾</a>的规则来拦截可疑ip，限流以及拉黑。</p>
+<p>活动简单来说就是通过爬取特定的网站上的信息，综合参与者的的请求被识别为爬虫的次数，来评分。</p>
+<h2 id="活动页介绍"><a href="#活动页介绍" class="headerlink" title="活动页介绍"></a>活动页介绍</h2><p>共有两个主要页面，一个列表页，每页10个公司，带有分页功能，以及公司的详情页。<br>参加者需要爬取5000家公司的相应信息来得分。<br>活动的页面选择使用 <a href="https://pugjs.org" target="_blank" rel="noopener">Pug（html模板语言）</a> + <a href="https://nestjs.com" target="_blank" rel="noopener">Nest.js（node服务）</a> 通过后端直接渲染页面的方式来完成。</p>
+<h2 id="得分项及反爬措施"><a href="#得分项及反爬措施" class="headerlink" title="得分项及反爬措施"></a>得分项及反爬措施</h2><p>一共五个得分点：<br><img src="/images/case-study/spider/spider-1.png" alt="活动页得分项" /></p>
+<h3 id="1-公司名称"><a href="#1-公司名称" class="headerlink" title="1. 公司名称"></a>1. 公司名称</h3><p>最简单的一项，只要请求页面就可以直接拿到，没有任何的反爬措施，白送的1分。<br><img src="/images/case-study/spider/spider-item-1.png" alt="白给的公司名称" style="width:400px;margin:auto;" /></p>
+<h3 id="2-热线电话"><a href="#2-热线电话" class="headerlink" title="2. 热线电话"></a>2. 热线电话</h3><p>400热线电话使用雪碧图（精灵图）显示，略提升了一些难度。<br>准备了10张包含 0-9 10个数字且顺序不同的图片，node服务每次随机获取一张，并返回对应电话的位移量，用css在页面上显示完整的电话。<br><img src="/images/case-study/spider/spider-item-2.png" alt="热线电话" style="width:400px;margin:auto;" /><br><img src="/images/case-study/spider/spider-item-2-2.png" alt="随机的底图" style="width:400px;margin:auto;" /></p>
+<h4 id="【破解方法】"><a href="#【破解方法】" class="headerlink" title="【破解方法】"></a>【破解方法】</h4><p>方法一：将所有可能性的底图全部爬下来，然后找到位置偏移量的对应关系 Mapping，正则或是程序定位到css的偏移量，从 Map 里找到对应数字。<br>方法二：OCR</p>
+<h3 id="3-联系人手机号"><a href="#3-联系人手机号" class="headerlink" title="3. 联系人手机号"></a>3. 联系人手机号</h3><p>页面初次加载时，手机号从服务渲染出来就是带有星号的，需要通过一个 Ajax 请求来获取详细的号码。<br><img src="/images/case-study/spider/spider-item-3.png" alt="获取手机号的请求" /></p>
+<p>请求返回的手机号经过了一些加密处理，原理简单来说就是把数字的 charCode 偏移几位，然后转成 base64。客户端拿到以后用相同的方法，逆向解就可以拿到真实的手机号。</p>
+<p>node 层加密过程：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> encode = <span class="function">(<span class="params">str: string, digit = <span class="number">10</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> convert = <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; str.length; i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> charCode = str.charCodeAt(i);</span><br><span class="line">    convert += <span class="built_in">String</span>.fromCharCode(charCode + digit);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> Buffer.from(convert).toString(<span class="string">'base64'</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>客户端解密过程:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">es</span>(<span class="params">_0x380035</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> _0x4301eb = _0x46a74e;</span><br><span class="line">  <span class="keyword">let</span> _0x165d09 = <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">const</span> _0x35a10a = <span class="built_in">window</span>[<span class="string">'atob'</span>](_0x380035);</span><br><span class="line">  <span class="keyword">for</span> (</span><br><span class="line">    <span class="keyword">let</span> _0x321545 = <span class="number">0x0</span>;</span><br><span class="line">    _0x321545 &lt; _0x35a10a[_0x4301eb(<span class="number">0x79</span>)];</span><br><span class="line">    _0x321545++</span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="keyword">const</span> _0x49c453 = _0x35a10a[_0x4301eb(<span class="number">0x6d</span>)](_0x321545);</span><br><span class="line">    _0x165d09 += <span class="built_in">window</span>[_0x4301eb(<span class="number">0x6f</span>)][<span class="string">'fromCharCode'</span>](_0x49c453 - <span class="number">0xa</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _0x165d09;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然是混淆的，但是还是在客户端的源码里可以找到，只要有node或是浏览器的运行环境，就可以轻松运行 es() 来解（完全不需要管过程）。</p>
+<p>手机号这里还留了一个陷阱，我们网页加了设备指纹，如果用浏览器正常打开，在请求的header里会带有相关的字段，如果是通过 Api 打过来的则没有。<br>对于没有相关header的请求，会返回一个假的加密过的手机号。</p>
+<h4 id="【破解方法】-1"><a href="#【破解方法】-1" class="headerlink" title="【破解方法】"></a>【破解方法】</h4><p>方法一：从浏览器调试工具里不难找到 es 这个 Function，解混淆，然后用爬虫所用语言重写一遍，拿到手机号后调用重写的方法即可反解。<br>方法二：OCR</p>
+<h3 id="4-联系人名字"><a href="#4-联系人名字" class="headerlink" title="4. 联系人名字"></a>4. 联系人名字</h3><p>这里自己把自己坑了，用的 WebSocket 获取联系人，结果没考虑到 socket 只有连的那下有个http请求，后面都是保持连接直接通讯，所以根本不会过Ingress，并且中反爬的规则，也无法跳验证码拦截。</p>
+<p>点击获取详情按钮后：<br><img src="/images/case-study/spider/spider-item-4.png" alt="ws获取联系人" /></p>
+<p>最后决定加一个限流，如果获取太快服务层就主动断开 socket，需要重连。</p>
+<h4 id="【破解方法】-2"><a href="#【破解方法】-2" class="headerlink" title="【破解方法】"></a>【破解方法】</h4><p>方法一：只要接通连上服务端的 WebSocket，模拟浏览器的 headers，以及握手方式，浏览器传什么，模拟就传什么，最后总能拿到，而且连上一次就不需要断开了。<br>方法二：OCR</p>
+<h3 id="5-公司地址"><a href="#5-公司地址" class="headerlink" title="5. 公司地址"></a>5. 公司地址</h3><p>这里用了字体反爬。<br>服务层渲染的是一个混淆后的地址（文字），需要通过相应的字体文件，用css font-family 来显示正确的内容。</p>
+<img src="/images/case-study/spider/spider-item-5.png" alt="公司地址混淆" style="width:500px;margin:auto;" />
+<img src="/images/case-study/spider/spider-item-5-2.png" alt="公司地址真实" style="width:400px;margin:auto;" />
+<img src="/images/case-study/spider/spider-item-5-3.png" alt="字体文件，英文及中文阿拉伯数字映射" style="width:400px;margin:auto;" />
+
+<h4 id="【破解方法】-3"><a href="#【破解方法】-3" class="headerlink" title="【破解方法】"></a>【破解方法】</h4><p>方法一：获取到所以有可能性的字体文件，然后使用相关工具解除文字和文字或文字和字符的对应关系，然后反解。<br>方法二：OCR</p>
+<h4 id="以上五项就是得分点，5000条数据，满分5万分，分高者取胜。"><a href="#以上五项就是得分点，5000条数据，满分5万分，分高者取胜。" class="headerlink" title="以上五项就是得分点，5000条数据，满分5万分，分高者取胜。"></a>以上五项就是得分点，5000条数据，满分5万分，分高者取胜。</h4><h3 id="6-页码处理"><a href="#6-页码处理" class="headerlink" title="6. 页码处理"></a>6. 页码处理</h3><p>列表页的地址栏会带有页码，例如：<code>?p=12</code><br>为了让「爬虫」们不要轻易就用p=1、2、3、4的循环去打开页面，将页码简单加了个密，原理和手机号显示是一样的，每个数字的 charCode 位移几位，然后 base64 转换，就成了下面的样子：</p>
+<img src="/images/case-study/spider/spider-item-6.png" alt="列表页页码处理" style="width:400px;margin:auto;" />
+
+<p>这样一来大家只能模拟去点击下一页来获取页码，而不是直接猜，当然这种加密是很简单的，看这个字符串就长得很像 base64，所以还是可以花时间猜出来。</p>
+<h3 id="7-设备指纹"><a href="#7-设备指纹" class="headerlink" title="7. 设备指纹"></a>7. 设备指纹</h3><p>每个访问者第一次访问后都会留下指纹，放到 localStorage，再下一次访问的时候，同一个指纹的行为和 ip 进行分析。</p>
+<img src="/images/case-study/spider/spider-item-7.png" alt="获取指纹" style="width:600px;margin:auto;" />
+
+<h4 id="【破解方法】-4"><a href="#【破解方法】-4" class="headerlink" title="【破解方法】"></a>【破解方法】</h4><p>方法一：开代理并且频繁切 ip 的话基本可以无视这个。</p>
+<h2 id="神盾"><a href="#神盾" class="headerlink" title="神盾"></a><a href="/case-study/shield/">神盾</a></h2><p>当然前端的反爬再花里胡哨也是有局限的，如果要照顾SEO，那就更不能做什么太多的防爬措施了。并且在如今相当成熟的 OCR 面前，前端反爬都是浮云。</p>
+<p>所以作为先锋，以上我做的只是拖慢大家的爬取的时间。真正的盾还是在<a href="/case-study/shield/">神盾系统</a>。我们会收集用户的真实IP，然后进行分析，识别为爬虫的则会返回验证码滑块，如果多次命中规则，则会限流。</p>
+<p>而我在前端的工作本质是增加需要获取全部信息接口的数量，接入神盾的SDK，获取正确的IP给到神盾，并加入设备指纹。这次爬虫攻防活动也是为了收集爬虫的行为，为以后神盾规则优化做铺垫。</p>
+<h2 id="DONE"><a href="#DONE" class="headerlink" title="DONE."></a>DONE.</h2><p>第一名以3w分左右获胜。</p>
+<img src="/images/case-study/spider/spider-result.jpg" alt="颁奖" style="width:500px;margin:auto;" />
+
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a><a class="next" href="/case-study/earth-globe/">模仿 GitHub 首页的地球 🌍</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/case-study/spider-challenge/';
+    this.page.identifier = 'case-study/spider-challenge/';
+    this.page.title = '爬虫攻防战 🕷';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

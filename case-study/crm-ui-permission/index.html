@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>CRM系统前端权限控制优化升级方案 | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">CRM系统前端权限控制优化升级方案</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">CRM系统前端权限控制优化升级方案</h1><div class="post-meta">2020-12-25<span> | </span><span class="category"><a href="/categories/Case-Study/">Case Study</a></span></div><a class="disqus-comment-count" data-disqus-identifier="case-study/crm-ui-permission/" href="/case-study/crm-ui-permission/#disqus_thread"></a><div class="post-content"><h2 id="为什么要做权限控制？"><a href="#为什么要做权限控制？" class="headerlink" title="为什么要做权限控制？"></a>为什么要做权限控制？</h2><p>当前前端代码中控制组件显示有几种方式：</p>
+<h3 id="1-通过-visible-permissions-接口返回的权限列表"><a href="#1-通过-visible-permissions-接口返回的权限列表" class="headerlink" title="1. 通过 visible_permissions 接口返回的权限列表"></a>1. 通过 visible_permissions 接口返回的权限列表</h3><ul>
+<li>/profile 接口返回了当前登录用户的基础信息以及一个长长的权限列表</li>
+</ul>
+<img src="/images/case-study/crm-permissions/per.png" alt="前端权限列表" style="width:400px;margin:auto;" />
+
+
+<ul>
+<li>有了这个列表以后，就可以在代码里这样去控制组件显示：</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tabs = [</span><br><span class="line">    <span class="comment">// ... some tabs</span></span><br><span class="line">]</span><br><span class="line"><span class="keyword">if</span> (visible_permissions.includes(<span class="string">'tab_entity_lead'</span>)) &#123;</span><br><span class="line">    tabs.push(<span class="xml"><span class="tag">&lt;<span class="name">SomeComponent</span> /&gt;</span></span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>开发上线的时候一时爽，但是未来要修改，查阅权限，就会很痛苦。<br>产品想不起来某个角色是否有某个权限，就来问开发，开发发现这部分代码不是自己写的，就开始全局搜，凭感觉找。找到后产品说我们要修改一下…</p>
+<h3 id="2-通过-role-id-判断权限"><a href="#2-通过-role-id-判断权限" class="headerlink" title="2. 通过 role_id 判断权限"></a>2. 通过 role_id 判断权限</h3><ul>
+<li>这个就更过分了，/profile 接口会返回一个 <code>roles</code> 字段，是一个用逗号分隔的角色组合： <code>roles: &quot;1,3,20&quot;</code></li>
+<li>同理在代码里就是这样控制：</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tabs = [</span><br><span class="line">    <span class="comment">// ... some tabs</span></span><br><span class="line">]</span><br><span class="line"><span class="keyword">if</span> (roles.split(<span class="string">','</span>).includes(<span class="string">'1'</span>)) &#123;</span><br><span class="line">    tabs.push(<span class="xml"><span class="tag">&lt;<span class="name">SomeComponent</span> /&gt;</span></span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这么做就连权限规则的名字也没有，所以更加难整理修改。</p>
+<p>原有的两种判断方式都是在代码中写定判断逻辑</p>
+<ol>
+<li>判断方式不统一且太分散</li>
+<li>修改某角色的权限组合要改代码逻辑，成本比较大</li>
+<li>不容易定位到某角色某权限的当前表现</li>
+</ol>
+<h2 id="前端权限设计逻辑"><a href="#前端权限设计逻辑" class="headerlink" title="前端权限设计逻辑"></a>前端权限设计逻辑</h2><p>分散在项目各处的权限判断必然是错误的方向，想统一去管理页面渲染，最能想到的就是用一个JSON格式的配置告诉页面这个登录用户的页面将会渲染成什么样子。</p>
+<p><strong>所以方案就是：</strong></p>
+<ul>
+<li><strong>为每个角色转一份JSON，并提供一个UI界面去管理控制、修改模板。</strong></li>
+<li><strong>每个登录用户的权限是他/她拥有的各个角色的合集。</strong></li>
+<li><strong>React：接口给我什么，我就渲染什么。</strong></li>
+</ul>
+<p>JSON数据的层级即为前端页面组件的层级，通过遍历数据来渲染应该显示的组件。</p>
+<p>JSON的组成为：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">pages: [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"component_type"</span>: <span class="string">"menu"</span>,</span><br><span class="line">    <span class="string">"contents"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"component_type"</span>: <span class="string">"menu-page"</span>,</span><br><span class="line">        <span class="string">"contents"</span>: [</span><br><span class="line">          <span class="comment">// 为空或其他同样格式的对象数据</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"id"</span>: <span class="number">4</span>,</span><br><span class="line">        <span class="string">"key"</span>: <span class="string">"dashboard"</span>,</span><br><span class="line">        <span class="string">"meta"</span>: &#123;</span><br><span class="line">          <span class="string">"icon"</span>: <span class="string">"menu_dashboard"</span>,</span><br><span class="line">          <span class="string">"route"</span>: <span class="string">"/dashboard"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"name"</span>: <span class="string">"首页"</span></span><br><span class="line">      &#125;,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>每个对象都拥有：</p>
+<ul>
+<li><code>component_type</code>  React 用于判断渲染的组件类型（Menu / Page / Section …）</li>
+<li><code>contents</code> 子集，所包含的层级关系</li>
+<li><code>id</code> id</li>
+<li><code>key</code> React 用于判断渲染具体组件的 key</li>
+<li><code>meta</code> 其他信息</li>
+<li><code>name</code> 中文名称</li>
+</ul>
+<p>页面上应该渲染的元素全部由这个数据决定。</p>
+<h2 id="拆页面：页面组件和层级定义"><a href="#拆页面：页面组件和层级定义" class="headerlink" title="拆页面：页面组件和层级定义"></a>拆页面：页面组件和层级定义</h2><ol>
+<li>Menu （component_type: menu）<ol>
+<li>侧边栏的大类（主控台、常用功能、管理功能）</li>
+</ol>
+</li>
+<li>Page（component_type: menu-page/single-page）<ol>
+<li>路由，不同的页面，/dashboard、/workbench、… 等</li>
+<li>侧边栏的配置项</li>
+<li>没有权限的路由会返回404界面</li>
+<li>分为 menu-page（标准页） 和 single-page（详情页）</li>
+</ol>
+</li>
+<li>Section（component_type：section-group / section）<ol>
+<li>各页面下的标签栏（支持嵌套）</li>
+<li>必须是 section-group 作为父级，section 作为子级，section-group 下只能是 section，section 下可以继续加入 section-group 来实现嵌套</li>
+</ol>
+</li>
+<li>首页组件 （component_type: dashboard-item）<ol>
+<li>首页上按权限显示的组件</li>
+</ol>
+</li>
+<li>Common<ol>
+<li>任何上面没有提到的其他需要权限的内容</li>
+</ol>
+</li>
+</ol>
+<p>页面层级示意图：<br><img src="/images/case-study/crm-permissions/per-2.png" alt="页面层级示意图" /></p>
+<h2 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h2><ol>
+<li>页面组件可选配置的模板的CRUD <code>GET</code> <code>POST</code></li>
+</ol>
+<p>页面组件的模板编辑：<br><img src="/images/case-study/crm-permissions/per-3.png" alt="页面组件的模板编辑" /></p>
+<ol start="2">
+<li>各个角色所配的内容的CRUD <code>GET</code> <code>POST</code></li>
+</ol>
+<p>角色所拥有的的权限编辑：<br><img src="/images/case-study/crm-permissions/per-4.png" alt="角色所拥有的的权限编辑" /></p>
+<ol start="3">
+<li>用户登录后获取的所拥有角色合集的权限配置 <code>GET</code></li>
+</ol>
+<p>/fe_permissions 返回包含当前登录用户的所有页面内容（JSON）<br><img src="/images/case-study/crm-permissions/per-5.png" alt="/fe_permissions 返回的 JSON 数据" /></p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>提供了一系列内容的 Providers，JSON 配置里给出组件类型，就按需渲染对应的内容。</p>
+<p>Components Providers<br>├── ContentProvider.jsx<br>├── DashboardProvider.jsx<br>├── PageProvider.jsx<br>├── SectionsProvider.jsx</p>
+<p>└── index.less</p>
+<p>举例：ContentProvider.jsx</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ContentProvider = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;</span><br><span class="line">    content,</span><br><span class="line">    sectionsConfig = &#123;&#125;,</span><br><span class="line">  &#125; = props</span><br><span class="line"></span><br><span class="line">  <span class="keyword">switch</span> (content.componentType) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'section-group'</span>:</span><br><span class="line">      <span class="keyword">return</span> (</span><br><span class="line">        &lt;SectionsProvider &#123;...sectionsConfig&#125; sections=&#123;content.contents&#125; /&gt;</span><br><span class="line">      )</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'dashboard-item'</span>:</span><br><span class="line">      <span class="keyword">return</span> (</span><br><span class="line">        &lt;DashboardProvider &#123;...props&#125; /&gt;</span><br><span class="line">      )</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>没有该内容的渲染方式 &#123;content.componentType&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> ContentProvider</span><br></pre></td></tr></table></figure>
+
+<p>SectionProvider.jsx</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SectionsProvider = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;</span><br><span class="line">    sections,</span><br><span class="line">    tabPaneContent,</span><br><span class="line">    tabsConfig = &#123;&#125;,</span><br><span class="line">    customTabName = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;,</span><br><span class="line">  &#125; = props</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;Tabs &#123;...tabsConfig&#125; type=<span class="string">'card'</span>&gt;</span><br><span class="line">      &#123;sections.map(<span class="function">(<span class="params">&#123; meta: &#123; scope &#125;, key, name, contents &#125;</span>) =&gt;</span> (</span><br><span class="line">        &lt;TabPane</span><br><span class="line">          key=&#123;scope || key&#125;</span><br><span class="line">          tab=&#123;customTabName(&#123; name, key, scope &#125;) || name&#125;</span><br><span class="line">        &gt;</span><br><span class="line">          &#123;<span class="comment">/* 自定的内容 */</span>&#125;</span><br><span class="line">          &#123;tabPaneContent &amp;&amp; tabPaneContent(&#123; <span class="attr">scope</span>: scope || key, key, name &#125;)&#125;</span><br><span class="line">          &#123;<span class="comment">/* 接口里返回的内容 */</span>&#125;</span><br><span class="line">          &#123;contents.map(<span class="function"><span class="params">content</span> =&gt;</span> (</span><br><span class="line">            &lt;ContentProvider</span><br><span class="line">              key=&#123;content.key&#125;</span><br><span class="line">              content=&#123;content&#125;</span><br><span class="line">              sectionsConfig=&#123;&#123;</span><br><span class="line">                ...props,</span><br><span class="line">                tabsConfig: tabsConfig.subConfig,</span><br><span class="line">              &#125;&#125;</span><br><span class="line">            /&gt;</span><br><span class="line">          ))&#125;</span><br><span class="line">        &lt;<span class="regexp">/TabPane&gt;</span></span><br><span class="line"><span class="regexp">      ))&#125;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>Tabs&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在遍历整个JSON配置时渲染对应的组件。</p>
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a><a href="/tags/React/"><i class="fa fa-tag"></i>React</a></div><div class="post-nav"><a class="pre" href="/reading/4.2021-trend/">2021前端行业发展趋势</a><a class="next" href="/fe/CSS/4.devops-ui/">DevOps UI 设计</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/case-study/crm-ui-permission/';
+    this.page.identifier = 'case-study/crm-ui-permission/';
+    this.page.title = 'CRM系统前端权限控制优化升级方案';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

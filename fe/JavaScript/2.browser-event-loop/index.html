@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>浏览器的 EventLoop | 守得云开不见月</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.1/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/2.1.4/toastr.min.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">浏览器的 EventLoop</h1><a id="logo" href="/.">守得云开不见月</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">浏览器的 EventLoop</h1><div class="post-meta">2020-05-22<span> | </span><span class="category"><a href="/categories/Development/">Development</a></span></div><a class="disqus-comment-count" data-disqus-identifier="fe/JavaScript/2.browser-event-loop/" href="/fe/JavaScript/2.browser-event-loop/#disqus_thread"></a><div class="post-content"><h4 id="浏览器的内核：-Render-进程"><a href="#浏览器的内核：-Render-进程" class="headerlink" title="浏览器的内核： Render 进程"></a>浏览器的内核： Render 进程</h4><ul>
+<li>GUI渲染线程</li>
+<li>JavaScript 引擎线程 （Chrome v8）</li>
+<li>事件触发线程</li>
+<li>定时器线程</li>
+<li>异步 HTTP 请求线程</li>
+</ul>
+<h4 id="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"><a href="#JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。" class="headerlink" title="JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。"></a>JavaScrit是一个单线程（JS引擎是单线程的）的拥有异步特性（拥有独特的异步线程）的事件驱动（事件也是一个单独的线程处理）的解释型脚本语言。</h4><h4 id="1-异步线程"><a href="#1-异步线程" class="headerlink" title="1. 异步线程"></a>1. 异步线程</h4><ul>
+<li>网络请求<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(url).then(<span class="function"><span class="params">res</span> =&gt;</span> res.json()).then(<span class="built_in">console</span>.log);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li>定时器<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(fn, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li>事件触发<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>);</span><br><span class="line">btn.addEventListener(<span class="string">'click'</span>, () =&gt; <span class="built_in">console</span>.log(<span class="string">'clicked btn'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> timeoutId = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    clearTimeout(timeoutId);</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
+在执行 <code>console.log(&#39;hello&#39;)</code> 的时候，点击按钮，不会立刻执行绑定的事件，JS引擎处于阻塞状态。</li>
+</ul>
+<h4 id="2-任务队列-Task-Queue"><a href="#2-任务队列-Task-Queue" class="headerlink" title="2. 任务队列 Task Queue"></a>2. 任务队列 Task Queue</h4><img class="article-image" src="/images/fe/browser-event-loop.png" width="500" alt="Browser Event Loop" />
+
+<ul>
+<li>JS引擎从上到下将程序入栈出栈的过程中，遇到那些有异步能力的 WebApi，会选择把他们放入他们自己的线程中，短暂的忽略他们。继续执行那些同步代码。</li>
+<li>在各自的线程里完成处理之后，会将这些异步结果以回调的形式放入 Task Queue 中。</li>
+<li>等待JS引擎空闲，再次回到JS引擎中。</li>
+</ul>
+<h4 id="3-Event-Loop-（浏览器）"><a href="#3-Event-Loop-（浏览器）" class="headerlink" title="3. Event Loop （浏览器）"></a>3. Event Loop （浏览器）</h4><ul>
+<li>任务队列和JS主引擎之间的桥梁。</li>
+<li>它被设计出来的目的也就是为了保证JS引擎线程的安全和稳定的。</li>
+<li>其实是在把异步转化为同步。</li>
+<li>An event loop has one or more task queues. A task queue is a set of tasks.</li>
+</ul>
+<h4 id="4-1-宏任务队列-Macrotask-Queue"><a href="#4-1-宏任务队列-Macrotask-Queue" class="headerlink" title="4.1 宏任务队列 Macrotask Queue"></a>4.1 宏任务队列 Macrotask Queue</h4><ul>
+<li>setTimeout</li>
+<li>setInterval</li>
+</ul>
+<h4 id="4-2-微任务队列-Microtask-Queue"><a href="#4-2-微任务队列-Microtask-Queue" class="headerlink" title="4.2 微任务队列 Microtask Queue"></a>4.2 微任务队列 Microtask Queue</h4><ul>
+<li>Promise</li>
+<li>process.nextTick</li>
+<li>MutationObserver</li>
+</ul>
+<p>MicroTask 会在一次 EventLoop 中全部执行完。</p>
+<ul>
+<li>同步（主线程执行栈清空）-&gt; 微任务（全部） -&gt; 宏任务（第一个） -&gt; 微（全部）-&gt; 宏（一个）-&gt; …</li>
+</ul>
+<h4 id="5-其他关于浏览器加载资源阻塞"><a href="#5-其他关于浏览器加载资源阻塞" class="headerlink" title="5. 其他关于浏览器加载资源阻塞"></a>5. 其他关于浏览器加载资源阻塞</h4><ul>
+<li><p>script</p>
+<img class="article-image" src="/images/fe/script-async-defer.jpeg" width="500" alt="<script> async defer" />
+</li>
+<li><p>css 加载不会阻塞 DOM 树的解析</p>
+</li>
+<li><p>css 加载会阻塞 DOM 树的渲染</p>
+</li>
+<li><p>css 加载会阻塞后面 js 语句的执行</p>
+</li>
+</ul>
+<h2 id="ps-前端输入-url-到页面渲染的流程"><a href="#ps-前端输入-url-到页面渲染的流程" class="headerlink" title="ps: 前端输入 url 到页面渲染的流程:"></a>ps: 前端输入 url 到页面渲染的流程:</h2><h3 id="1-DNS-解析-URL-的过程"><a href="#1-DNS-解析-URL-的过程" class="headerlink" title="1. DNS 解析 URL 的过程"></a>1. DNS 解析 URL 的过程</h3><p>浏览器输入域名后, 操作系统首先会检查本地 hosts 文件是否有当前网址的映射关系, 如果有直接调用这个 IP 地址映射完成域名解析<br>如果没有则查找本地 DNS 解析器缓存中是否有当前网址的映射关系, 如果有直接返回完成域名解析<br>如果没有则到本地 TCP/IP 设置的 DNS 服务器进行查询, 如果查找的网址在 DNS 资源的范围内则返回解析给主机, 此解析具有权威性<br>如果不在本地 DNS 资源范围内, 但该服务器存储了网址的映射关系, 则调用这个 IP 的映射关系, 完成域名解析<br>如果本地 DNS 服务器解析失败并且缓存中没有对应的映射关系则去 DNS 服务器中查找</p>
+<h3 id="2-浏览器与服务器交互的过程"><a href="#2-浏览器与服务器交互的过程" class="headerlink" title="2. 浏览器与服务器交互的过程"></a>2. 浏览器与服务器交互的过程</h3><p>根据 IP 建立 TCP 连接（三次握手）<br>首先客户端向服务端发送一个同步信号 SYN， 等待服务端接收<br>服务端收到同步信号后会返回一个确认信号以及一个同步信号 SYN/ACK 给客户端<br>客户端收到后返回一个确认信号 ACK，此时通道建立<br>HTTP 发起请求<br>服务器处理请求， 浏览器接收 HTTP 响应<br>渲染页面<br>关闭 TCP 连接（四次挥手）<br>客户端发送一个结束信号 FIN 给服务端<br>服务端收到后发送一个确认信号 ACK 给客户端<br>当服务端数据传输完之后发送一个 FIN 结束信号给客户端<br>客户端收到后发送一个确认信号 ACK 给服务端， 此时通道关闭</p>
+<h3 id="3-浏览器页面渲染的过程"><a href="#3-浏览器页面渲染的过程" class="headerlink" title="3. 浏览器页面渲染的过程"></a>3. 浏览器页面渲染的过程</h3><p>解析 HTML 文件为 DOM 树<br>解析 CSS 文件为 CSS 规则树<br>合并 DOM 树以及 CSS 规则树为 renderTree 渲染树<br>进入 Layout 环节， 对元素节点进行大小尺寸以及位置的计算<br>painting 环节，将渲染树各个节点绘制到屏幕上</p>
+<p>复制于：<a href="https://www.jianshu.com/p/d1819f5ae215" target="_blank" rel="noopener">https://www.jianshu.com/p/d1819f5ae215</a></p>
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a></div><div class="post-nav"><a class="pre" href="/fe/JavaScript/3.promise.resolve.then/">Promise.resolve().then</a><a class="next" href="/fe/JavaScript/1.node-event-loop/">Node 中的 EventLoop</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'https://ykzhukian.github.io/fe/JavaScript/2.browser-event-loop/';
+    this.page.identifier = 'fe/JavaScript/2.browser-event-loop/';
+    this.page.title = '浏览器的 EventLoop';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//ykzhukian-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://ykzhukian-github-io.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Case-Study/">Case Study</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Noncence/">Noncence</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photograph/">Photograph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Reading-Notes/">Reading Notes</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/Tools/" style="font-size: 15px;">Tools</a> <a href="/tags/Read/" style="font-size: 15px;">Read</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Webpack/" style="font-size: 15px;">Webpack</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/noncence/20220202-daily/">PR 过期了</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/JavaScript/14.mouse-track/">前端反爬：鼠标轨迹</a></li><li class="post-list-item"><a class="post-list-link" href="/noncence/20220127-daily/">听了老板建硕的一个分享</a></li><li class="post-list-item"><a class="post-list-link" href="/webpack/3.webpack-base/">一些 Webpack 相关备忘</a></li><li class="post-list-item"><a class="post-list-link" href="/photo/2.2022-qingdao/">青岛跨年</a></li><li class="post-list-item"><a class="post-list-link" href="/fe/Engineering/1.private-npm-nexus/">私有 npm 仓库 Nexus & 工具库配合 GitLab 自动发布</a></li><li class="post-list-item"><a class="post-list-link" href="/reading/7.meituan-micro-fe/">稀土大会记录</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/shield/">百姓网反爬虫系统：神盾管理后台</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/micro-front-end/">微前端在基础架构应用系列的实践</a></li><li class="post-list-item"><a class="post-list-link" href="/case-study/spider-challenge/">爬虫攻防战 🕷</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 其他链接</i></div><ul></ul><a href="https://github.com/ykzhukian/notebook" title="代码相关的笔记" target="_blank">代码相关的笔记</a><ul></ul><a href="https://github.com/ykzhukian" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://www.instagram.com/kianykz/" title="Instagram" target="_blank">Instagram</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© 2022 <a href="/." rel="nofollow">Kian Zhu</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
