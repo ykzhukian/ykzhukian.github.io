@@ -4,13 +4,25 @@
   
     
     <entry>
-      <title>noncence/20220413</title>
-      <link href="/noncence/20220413/"/>
-      <url>/noncence/20220413/</url>
+      <title>Alfred自动生成随机的测试邮箱地址</title>
+      <link href="/tool/6.20220416/"/>
+      <url>/tool/6.20220416/</url>
       
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script>]]></content>
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><p>Gmail 邮箱地址后面加上 <a href="mailto:+xxx@email.com">+xxx@email.com</a> 就可以用原来的邮箱接收测试邮件，避免同一个邮箱重复注册之类的场景。</p><p>每次要手动编写比如 <code>kian.zhu+asdfasdf@airwallex.com</code> 这种邮箱，就会很乱，而且也很容易遇到重复。所以，决定用 Alfred 自动生成。去重的目的就用时间戳实现。</p><h2 id="1-创建两个步骤"><a href="#1-创建两个步骤" class="headerlink" title="1. 创建两个步骤"></a>1. 创建两个步骤</h2><ul><li>生成邮箱地址</li><li>复制（Alfred 自带的复制到剪切板）<img style="width:600px;margin:auto;" src="/images/tool/20220416/1.png" alt="两步：1. 生成 2. 复制" /></li></ul><h2 id="2-编写邮箱地址输出"><a href="#2-编写邮箱地址输出" class="headerlink" title="2. 编写邮箱地址输出"></a>2. 编写邮箱地址输出</h2><ul><li>keyword：<code>email</code>、No Argument</li><li>使用 php 语言，拼一个 <code>result</code><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$result = <span class="string">'kian.zhu+test_'</span> . @time() . <span class="string">'@airwallex.com'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;?xml version="1.0"?&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;items&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;item uid="email" arg="'</span>.$result.<span class="string">'"&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;title&gt;结果为: '</span> .$result. <span class="string">'&lt;/title&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;subtitle&gt;Press Enter to paste&lt;/subtitle&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;icon&gt;icon.png&lt;/icon&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/item&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/items&gt;'</span>;</span><br></pre></td></tr></table></figure><img style="width:600px;margin:auto;" src="/images/tool/20220416/2.png" alt="" /></li></ul><h2 id="3-结果展示"><a href="#3-结果展示" class="headerlink" title="3. 结果展示"></a>3. 结果展示</h2><ul><li>唤醒 Alfred 输入 email<img style="width:600px;margin:auto;" src="/images/tool/20220416/3.png" alt="敲回车复制" /></li></ul>]]></content>
       
       
+      <categories>
+          
+          <category> Development </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Tools </tag>
+            
+        </tags>
       
     </entry>
     
@@ -21,7 +33,7 @@
       <link href="/noncence/20220406/"/>
       <url>/noncence/20220406/</url>
       
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h2 id="4-6"><a href="#4-6" class="headerlink" title="4.6"></a>4.6</h2><p>今天我妈生日，她5点多就被派去支援。不过幸运的是，我托朋友的福抢到了烤鸭和蛋糕，可以为她庆生了。</p><p>最近看到太多大跌眼镜的事情，志愿者挨打致死，主人隔离后狗子被志愿者打死，一个又一个跳楼的人，一桩又一桩难以置信的罪恶。</p><p>其实我没有对上海的这些负面新闻太过惊讶，因为早就见识过很多所谓的上海瘪三。也早就领会过各式各样的恶意。所以，我的宗旨就是自己自由自在，快乐就好，不再奢求被包容，被认可。</p><h2 id="我妈"><a href="#我妈" class="headerlink" title="我妈"></a>我妈</h2><p>这段时间每天5点多就出门了（因为每次我都会被开关门的声音吵醒，而天总是还没有亮），不是去采样，就是去做志愿者，帮大家分发抗原检测试剂，分发补给。她很热衷于和邻里一起为这个小社区的和谐做一些贡献。我可以感受到，这是她的根。虽然我更宁愿做一株浮萍，但我非常理解他们不愿意随我去飘的心。这次疫情，也让我感受到了小社区和谐的重要，大多数人是群居的，并且在这种人口密度大的城市，也只有群居一种选择。</p><p>我们是党员之家，当然除了我。<br>我只希望我的父母不会成为下一批被烧完牺牲的煤渣。</p><p>至于这个城市，路还很长，如果还有机会希望大家能够一一算账；<br>如果没有，没关系，把预期降低，学会怎么规避伤害，保护自己，一定还有善终的可能。</p><p>希望至少能少为老龄后的生活，提心吊胆一些。</p><p>生日快乐。</p><h2 id="04-16-更新："><a href="#04-16-更新：" class="headerlink" title="04.16 更新："></a>04.16 更新：</h2><p>没想到过去十天更加严重了，每天4点多出门的爸妈。<br>我没有为你们骄傲，我只有心疼，希望大家对光荣的使命和背锅的工具能有更清晰的认识把。</p>]]></content>
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h2 id="4-6"><a href="#4-6" class="headerlink" title="4.6"></a>4.6</h2><p>今天我妈生日，她5点多就被派去支援。不过幸运的是，我托朋友的福抢到了烤鸭和蛋糕，可以为她庆生了。</p><p>最近看到太多大跌眼镜的事情，志愿者挨打致死，主人隔离后狗子被志愿者打死，一个又一个跳楼的人，一桩又一桩难以置信的罪恶。</p><p>其实我没有对上海的这些负面新闻太过惊讶，因为早就见识过很多所谓的上海瘪三。也早就领会过各式各样的恶意。所以，我的宗旨就是自己自由自在，快乐就好，不再奢求被包容，被认可。</p><h2 id="我妈"><a href="#我妈" class="headerlink" title="我妈"></a>我妈</h2><p>这段时间每天5点多就出门了（因为每次我都会被开关门的声音吵醒，而天总是还没有亮），不是去采样，就是去做志愿者，帮大家分发抗原检测试剂，分发补给。她很热衷于和邻里一起为这个小社区的和谐做一些贡献。我可以感受到，这是她的根。虽然我更宁愿做一株浮萍，但我非常理解他们不愿意随我去飘的心。这次疫情，也让我感受到了小社区和谐的重要，大多数人是群居的，并且在这种人口密度大的城市，也只有群居一种选择。</p><p>我们是党员之家，当然除了我。<br>我只希望我的父母不会成为下一批被烧完牺牲的煤渣。</p><p>至于这个城市，路还很长，如果还有机会希望大家能够一一算账；<br>如果没有，没关系，把预期降低，学会怎么规避伤害，保护自己，一定还有善终的可能。</p><p>希望至少能少为老龄后的生活，提心吊胆一些。</p><p>生日快乐。</p><h2 id="04-16-更新："><a href="#04-16-更新：" class="headerlink" title="04.16 更新："></a>04.16 更新：</h2><p>没想到过去十天更加严重了。</p><p>每天在一个屋里却见不到几面是什么体验。他们每天4点多出门，晚上我下班他们已经睡了…连生日也在棚里过。</p><p>没有任何骄傲，只有心疼，都50多的人了，有时候真想替他们干了。</p><p>光荣的使命和背锅的工具，只是很微妙的差别。不了解人心，又不懂人性的人根本当不了领导。</p><p>对上海的未来没有什么兴趣，留下来只是希望家人平安，仅此而已。</p>]]></content>
       
       
       <categories>
